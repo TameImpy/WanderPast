@@ -1,0 +1,70 @@
+{
+  "cities": [
+    {
+      "id": "london",
+      "name": "London",
+      "description": "From Roman Londinium to the Blitz, the capital's layers of history hide in plain sight. Wanderpast tours thread through the streets where it all happened — stand where the past still echoes.",
+      "hero_image_url": "https://cdn.wanderpast.app/cities/london/hero.jpg",
+      "tour_count": 1,
+      "editorial_pick_tour_id": "tower-of-london-prisoners",
+      "general_accessibility_note": "Most Tower-area tours follow paved paths. Cobblestone sections around Tower Hill may be uneven. Step-free alternatives are noted per waypoint."
+    }
+  ],
+  "tours": [
+    {
+      "id": "tower-of-london-prisoners",
+      "title": "The Prisoners of the Tower",
+      "city": "london",
+      "theme": "Imprisonment & Power",
+      "era": "Medieval — Tudor (1100–1600)",
+      "narration_style": "present_tense_omniscient",
+      "narrator_name": "Eleanor Vane",
+      "narrator_bio": "Eleanor Vane is a historian of medieval incarceration and a former curator at the Tower of London. Her work focuses on the lives of political prisoners and the architecture of confinement.",
+      "duration_minutes": 35,
+      "waypoint_count": 3,
+      "description": "Step inside the walls where kings locked away their rivals, where Anne Boleyn spent her final nights, and where the inscription-carved stones still carry the desperation of the condemned. This tour traces the Tower's history not as a fortress or palace, but as England's most feared prison.",
+      "preview_clip_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/preview.mp3",
+      "ambient_soundscape_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/ambient.mp3",
+      "completion_summary": "You've walked through five centuries of confinement at the Tower of London. From the earliest Norman dungeon beneath the White Tower to the Tudor-era inscriptions in the Beauchamp Tower, the stones around you have absorbed the fear, defiance, and last hopes of England's most notable prisoners. Anne Boleyn walked these same paths in May 1536. Sir Walter Raleigh paced these walls for thirteen years. Their stories are carved — literally — into the fabric of this place.",
+      "hero_image_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/hero.jpg",
+      "is_free": true,
+      "price_tier": "free",
+      "status": "published"
+    }
+  ],
+  "waypoints": [
+    {
+      "id": "tower-prisoners-01",
+      "tour_id": "tower-of-london-prisoners",
+      "order": 1,
+      "title": "Traitors' Gate",
+      "latitude": 51.5081,
+      "longitude": -0.0761,
+      "trigger_radius_m": 30.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/wp01-traitors-gate.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/transition-01-02.mp3"
+    },
+    {
+      "id": "tower-prisoners-02",
+      "tour_id": "tower-of-london-prisoners",
+      "order": 2,
+      "title": "The Beauchamp Tower",
+      "latitude": 51.5085,
+      "longitude": -0.0768,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/wp02-beauchamp-tower.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/transition-02-03.mp3"
+    },
+    {
+      "id": "tower-prisoners-03",
+      "tour_id": "tower-of-london-prisoners",
+      "order": 3,
+      "title": "Tower Green — The Scaffold Site",
+      "latitude": 51.5090,
+      "longitude": -0.0766,
+      "trigger_radius_m": 20.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/wp03-tower-green.mp3",
+      "transition_audio_url": null
+    }
+  ]
+}

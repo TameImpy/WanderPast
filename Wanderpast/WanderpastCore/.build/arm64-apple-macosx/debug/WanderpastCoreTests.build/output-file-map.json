@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/.build/arm64-apple-macosx/debug/WanderpastCoreTests.build/primary.swiftdeps"
+  },
+  "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/Tests/WanderpastCoreTests/AudioEngineStateTests.swift": {
+    "dependencies": "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/.build/arm64-apple-macosx/debug/WanderpastCoreTests.build/AudioEngineStateTests.d",
+    "object": "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/.build/arm64-apple-macosx/debug/WanderpastCoreTests.build/AudioEngineStateTests.swift.o",
+    "swiftmodule": "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/.build/arm64-apple-macosx/debug/WanderpastCoreTests.build/AudioEngineStateTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/.build/arm64-apple-macosx/debug/WanderpastCoreTests.build/AudioEngineStateTests.swiftdeps",
+    "diagnostics": "/Users/matthewrance/Documents/hiswalks/Wanderpast/WanderpastCore/.build/arm64-apple-macosx/debug/WanderpastCoreTests.build/AudioEngineStateTests.dia"
+  }
+}

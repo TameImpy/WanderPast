@@ -2,6 +2,9 @@ import SwiftUI
 
 /// Displays the sample tour metadata styled with Wanderpast design tokens.
 struct TourDetailView: View {
+    @ObservedObject var coordinator: TourCoordinator
+    @State private var showingTour = false
+
     private let content = SampleData.load()
 
     private var tour: Tour { content.tours[0] }
@@ -68,6 +71,21 @@ struct TourDetailView: View {
                         .font(.bodyPrimary)
                         .foregroundStyle(Color.deepInk)
                         .lineSpacing(6)
+
+                    // Start tour button
+                    Button(action: {
+                        coordinator.startTour()
+                        showingTour = true
+                    }) {
+                        Text("START TOUR")
+                            .font(.overline)
+                            .tracking(2)
+                            .foregroundStyle(Color.warmPaper)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, WPSpacing.sm)
+                            .background(Color.terracotta)
+                            .clipShape(RoundedRectangle(cornerRadius: WPRadius.sm))
+                    }
 
                     // Free badge
                     if tour.isFree {
@@ -137,6 +155,10 @@ struct TourDetailView: View {
         }
         .background(Color.warmPaper)
         .ignoresSafeArea(edges: .top)
+        .navigationDestination(isPresented: $showingTour) {
+            InTourView(coordinator: coordinator)
+                .navigationBarBackButtonHidden(true)
+        }
     }
 
     // MARK: - Helpers
@@ -161,8 +183,4 @@ struct TourDetailView: View {
         }
         .frame(maxWidth: .infinity)
     }
-}
-
-#Preview {
-    TourDetailView()
 }

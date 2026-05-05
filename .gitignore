@@ -1,0 +1,5 @@
+Wanderpast/build/
+Wanderpast/WanderpastCore/.build/
+*.xcuserstate
+xcuserdata/
+DerivedData/

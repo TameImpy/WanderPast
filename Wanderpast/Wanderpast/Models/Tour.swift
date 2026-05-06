@@ -19,7 +19,7 @@ struct Tour: Codable, Identifiable {
     let heroImageURL: URL?
     let isFree: Bool
     let priceTier: PriceTier
-    let status: TourStatus
+    let status: TourContentStatus
 
     enum CodingKeys: String, CodingKey {
         case id, title, city, theme, era
@@ -51,7 +51,7 @@ enum PriceTier: String, Codable {
     case bundle   // £7.99 city bundle
 }
 
-enum TourStatus: String, Codable {
+enum TourContentStatus: String, Codable {
     case draft
     case published
     case archived

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="Wanderpast"
+     xmlns="http://www.topografix.com/GPX/1/1">
+
+    <!-- Start: Outside Traitors' Gate (approach) -->
+    <wpt lat="51.5078" lon="-0.0758">
+        <name>Approach</name>
+        <time>2026-05-06T10:00:00Z</time>
+    </wpt>
+
+    <!-- Waypoint 1: Traitors' Gate (30m radius) -->
+    <wpt lat="51.5081" lon="-0.0761">
+        <name>Traitors' Gate</name>
+        <time>2026-05-06T10:00:30Z</time>
+    </wpt>
+
+    <!-- Linger at Traitors' Gate -->
+    <wpt lat="51.5081" lon="-0.0761">
+        <name>Traitors' Gate (linger)</name>
+        <time>2026-05-06T10:05:00Z</time>
+    </wpt>
+
+    <!-- Walking towards Beauchamp Tower -->
+    <wpt lat="51.5083" lon="-0.0764">
+        <name>Walking</name>
+        <time>2026-05-06T10:06:00Z</time>
+    </wpt>
+
+    <!-- Waypoint 2: The Beauchamp Tower (25m radius) -->
+    <wpt lat="51.5085" lon="-0.0768">
+        <name>The Beauchamp Tower</name>
+        <time>2026-05-06T10:07:00Z</time>
+    </wpt>
+
+    <!-- Linger at Beauchamp Tower -->
+    <wpt lat="51.5085" lon="-0.0768">
+        <name>Beauchamp Tower (linger)</name>
+        <time>2026-05-06T10:12:00Z</time>
+    </wpt>
+
+    <!-- Walking towards Tower Green -->
+    <wpt lat="51.5088" lon="-0.0767">
+        <name>Walking</name>
+        <time>2026-05-06T10:13:00Z</time>
+    </wpt>
+
+    <!-- Waypoint 3: Tower Green — The Scaffold Site (20m radius) -->
+    <wpt lat="51.5090" lon="-0.0766">
+        <name>Tower Green</name>
+        <time>2026-05-06T10:14:00Z</time>
+    </wpt>
+
+    <!-- Linger at Tower Green -->
+    <wpt lat="51.5090" lon="-0.0766">
+        <name>Tower Green (linger)</name>
+        <time>2026-05-06T10:19:00Z</time>
+    </wpt>
+
+</gpx>

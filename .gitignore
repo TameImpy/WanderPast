@@ -1,5 +1,7 @@
 Wanderpast/build/
 Wanderpast/WanderpastCore/.build/
+Wanderpast/WanderpastCore/build/
 *.xcuserstate
 xcuserdata/
 DerivedData/
+.DS_Store

@@ -3,33 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A10001 /* WanderpastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001; };
-		A10002 /* TourDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002; };
-		A10003 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003; };
-		A10004 /* Tour.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004; };
-		A10005 /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10005; };
-		A10006 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10006; };
-		A10007 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007; };
-		A10008 /* Color+Wanderpast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008; };
-		A10009 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009; };
-		A10010 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10010; };
-		A10011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10011; };
-		A10012 /* sample_tour.json in Resources */ = {isa = PBXBuildFile; fileRef = B10012; };
-		A10020 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10020; };
-		A10021 /* LiveGeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10021; };
-		A10022 /* TourCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10022; };
-		A10023 /* InTourView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10023; };
-		A10030 /* ambient.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10030; };
-		A10031 /* wp01-traitors-gate.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10031; };
-		A10032 /* wp02-beauchamp-tower.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10032; };
-		A10033 /* wp03-tower-green.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10033; };
-		A10034 /* transition-01-02.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10034; };
-		A10035 /* transition-02-03.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10035; };
-		A10040 /* WanderpastCore in Frameworks */ = {isa = PBXBuildFile; productRef = P10001; };
+		A10001 /* WanderpastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001 /* WanderpastApp.swift */; };
+		A10002 /* TourDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002 /* TourDetailView.swift */; };
+		A10003 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003 /* LaunchScreen.swift */; };
+		A10004 /* Tour.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004 /* Tour.swift */; };
+		A10005 /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10005 /* Waypoint.swift */; };
+		A10006 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10006 /* City.swift */; };
+		A10007 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007 /* SampleData.swift */; };
+		A10008 /* Color+Wanderpast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008 /* Color+Wanderpast.swift */; };
+		A10009 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* Typography.swift */; };
+		A10010 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10010 /* Spacing.swift */; };
+		A10011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10011 /* Assets.xcassets */; };
+		A10012 /* sample_tour.json in Resources */ = {isa = PBXBuildFile; fileRef = B10012 /* sample_tour.json */; };
+		A10020 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10020 /* AudioEngine.swift */; };
+		A10021 /* LiveGeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10021 /* LiveGeofenceManager.swift */; };
+		A10022 /* TourCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10022 /* TourCoordinator.swift */; };
+		A10023 /* InTourView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10023 /* InTourView.swift */; };
+		A10030 /* ambient.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10030 /* ambient.m4a */; };
+		A10031 /* wp01-traitors-gate.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10031 /* wp01-traitors-gate.m4a */; };
+		A10032 /* wp02-beauchamp-tower.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10032 /* wp02-beauchamp-tower.m4a */; };
+		A10033 /* wp03-tower-green.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10033 /* wp03-tower-green.m4a */; };
+		A10034 /* transition-01-02.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10034 /* transition-01-02.m4a */; };
+		A10035 /* transition-02-03.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10035 /* transition-02-03.m4a */; };
+		A10040 /* WanderpastCore in Frameworks */ = {isa = PBXBuildFile; productRef = P10001 /* WanderpastCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -345,6 +345,39 @@
 			};
 			name = Debug;
 		};
+		F10D02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";
+				DEVELOPMENT_TEAM = 68X5UNNLZ5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Wanderpast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Wanderpast;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.wanderpast.Wanderpast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		F10R01 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -400,38 +433,6 @@
 			};
 			name = Release;
 		};
-		F10D02 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Wanderpast/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Wanderpast;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.wanderpast.Wanderpast;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		F10R02 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -440,6 +441,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";
+				DEVELOPMENT_TEAM = 68X5UNNLZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wanderpast/Info.plist;
@@ -500,7 +502,6 @@
 			productName = WanderpastCore;
 		};
 /* End XCSwiftPackageProductDependency section */
-
 	};
 	rootObject = E10099 /* Project object */;
 }

@@ -94,11 +94,18 @@ final class TourCoordinator: ObservableObject {
     }
 
     func skipForward() {
-        service.skipForward()
-        audioEngine.skipForward()
-        // Trigger new waypoint audio if we advanced
-        if let id = service.currentWaypointID, let file = waypointAudioFiles[id] {
-            audioEngine.triggerWaypoint(id: id, audioFile: file)
+        if service.currentWaypointID == nil {
+            // No waypoint playing yet — trigger the first uncompleted one
+            let completedSet = Set(service.completedWaypointIDs)
+            if let next = waypoints.first(where: { !completedSet.contains($0.id) }) {
+                handleWaypointTriggered(next.id)
+            }
+        } else {
+            service.skipForward()
+            audioEngine.skipForward()
+            if let id = service.currentWaypointID, let file = waypointAudioFiles[id] {
+                audioEngine.triggerWaypoint(id: id, audioFile: file)
+            }
         }
         objectWillChange.send()
     }

@@ -3,9 +3,21 @@ import SwiftUI
 /// Minimal in-tour UI: current waypoint, progress, play/pause, skip controls.
 struct InTourView: View {
     @ObservedObject var coordinator: TourCoordinator
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(spacing: 0) {
+            // Close button
+            HStack {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "xmark")
+                        .font(.title3)
+                        .foregroundStyle(Color.stone)
+                        .padding(WPSpacing.sm)
+                }
+                Spacer()
+            }
+
             Spacer()
 
             // Current state

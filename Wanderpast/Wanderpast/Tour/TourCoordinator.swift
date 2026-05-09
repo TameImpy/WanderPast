@@ -61,9 +61,8 @@ final class TourCoordinator: ObservableObject {
         var titles: [String: String] = [:]
         for wp in waypoints { titles[wp.id] = wp.title }
 
-        // Start the pure state machine
-        let checkpoint = loadCheckpoint(tourID: tour.id)
-        service.startTour(tour: manifest, checkpoint: checkpoint)
+        // Start the pure state machine (checkpoint disabled during development)
+        service.startTour(tour: manifest)
 
         // Start the real audio
         audioEngine.startTour(
@@ -168,8 +167,9 @@ final class TourCoordinator: ObservableObject {
     // MARK: - Persistence (UserDefaults)
 
     private func saveCheckpoint() {
-        guard let tour = tourContent?.tours.first else { return }
-        UserDefaults.standard.set(service.completedWaypointIDs.count, forKey: "checkpoint_\(tour.id)")
+        // Disabled during development — re-enable for production
+        // guard let tour = tourContent?.tours.first else { return }
+        // UserDefaults.standard.set(service.completedWaypointIDs.count, forKey: "checkpoint_\(tour.id)")
     }
 
     private func loadCheckpoint(tourID: String) -> Int {

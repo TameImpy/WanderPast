@@ -1,63 +1,74 @@
 # Wanderpast — Next Steps
 
-**Delete this file once the steps below are complete.**
-
 ---
 
-## Prerequisites (do these before resuming with Claude)
+## Completed
 
-1. **macOS Tahoe upgrade** — should already be done (26.4.1)
-2. **Install Xcode** from the Mac App Store
-3. **Open Xcode once** — accept the license, let it install additional components
-4. **Run this command in terminal:**
-   ```
-   sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-   ```
-5. **Verify it works:**
-   ```
-   swift --version
-   xcodebuild -version
-   ```
-
----
-
-## Where we left off
-
-### Completed
 - Product discovery: 31-question grilling, all major decisions finalised
 - `architecture.md` — single source of truth for what we're building
 - `deferred_decisions.md` — what's explicitly out of MVP scope
 - `CLAUDE.md` — project instructions for future sessions
 - PRD submitted as GitHub issue #1 (https://github.com/TameImpy/WanderPast/issues/1)
 - 15 implementation issues created (#2-#16) as vertical slices
-- Issue #2 (Xcode project skeleton) — implemented, committed, pushed to main
-- TDD plan approved for AudioEngine (#3) and GeofenceManager (#4)
+- **Issue #2** (Xcode project skeleton) — done
+- **Issue #3** (AudioEngine) — done. AudioEngineState pure state machine with 10 tests
+- **Issue #4** (GeofenceManager) — done. GeofenceState pure state machine with 8 tests
+- **Issue #5** (Tracer Bullet) — partially done. TourService state machine with 7 tests. Framework wrappers built. End-to-end audio playback working in simulator with skip forward/backward
+- Design system fonts installed (Fraunces, Inter, JetBrains Mono)
+- Placeholder audio: medieval ambient soundscape (Freesound), TTS narration for 3 waypoints
 
-### Next: TDD implementation of issues #3 and #4 (in parallel if possible)
+## Known issues to fix
 
-**Issue #3: AudioEngine** (Wanderpast/Wanderpast/Audio/)
-- Wraps AVFoundation for dual-channel audio (ambient loop + waypoint narration)
-- Crossfade, background playback, lock screen controls, interruption handling
-- Extract pure logic into `AudioEngineState` for testability
-- TDD plan approved: 9 behaviours to test (see architecture.md section 2)
+### Checkpoint resume (temporarily disabled)
+- `TourCoordinator.saveCheckpoint()` and `loadCheckpoint()` are commented out
+- Problem: after completing a tour, restarting the app skips all waypoints (shows "3 of 3")
+- **Fix needed:** add a "restart tour" button, or only resume if tour was abandoned mid-way (not completed)
+- Files: `Wanderpast/Wanderpast/Tour/TourCoordinator.swift` lines 170-177
 
-**Issue #4: GeofenceManager** (Wanderpast/Wanderpast/Location/)
-- Wraps CoreLocation for GPS waypoint triggering
-- Jitter suppression, manual advance, accuracy management
-- Extract pure logic into `GeofenceState` for testability
+### Geofence triggering not working in simulator
+- Setting custom location via Features → Location → Custom Location doesn't trigger `didEnterRegion`
+- CoreLocation geofence monitoring is unreliable in the iOS Simulator
+- Skip forward button works as a workaround
+- **Fix options:** test on a real device, or add a development-mode "simulate geofence entry" button
+- The GPX file (`Resources/TowerOfLondonWalk.gpx`) also didn't work — Xcode's Debug → Simulate Location menu was greyed out
 
-**Approach:** Use the TDD skill (`/tdd`). Strict red-green-refactor — write failing test first, then implement. Create a Swift Package at `Wanderpast/WanderpastCore/` for the pure logic layers so `swift test` works from command line.
+### Skip backward doesn't work
+- Tapping skip backward has no visible effect
+- Likely the same issue as skip forward was — needs to handle the case where no waypoint is currently playing
 
-### After #3 and #4: Issue #5 (Tracer Bullet)
-Wire AudioEngine + GeofenceManager + TourService together so a user can walk a tour end-to-end with audio triggering automatically. This is the first "magic moment."
+### Ambient audio sourcing
+- Current ambient is a Freesound placeholder — good enough for development
+- Production needs: properly mixed ambient per tour/era from Artlist or Epidemic Sound
+- Architecture.md specifies external sound designer (freelance) for final mix
+
+### Narration is TTS placeholder
+- All 3 waypoint narrations are macOS `say` command output
+- Production needs: real voice actors or ElevenLabs (for the AI experiment tour)
+
+## Next issues to tackle
+
+### Issue #5 remaining work
+- [ ] Get geofence triggering working (real device test or dev-mode simulate button)
+- [ ] Fix skip backward from idle state
+- [ ] Add "restart tour" flow
+- [ ] Test background audio (screen locked, app backgrounded)
+- [ ] Test lock screen media controls
+
+### Issue #6 onwards
+See GitHub issues #6-#16: https://github.com/TameImpy/WanderPast/issues
 
 ---
 
-## Key files to read for context
-- `/Users/matthewrance/Documents/hiswalks/architecture.md` — product + technical architecture
-- `/Users/matthewrance/Documents/hiswalks/deferred_decisions.md` — what's out of scope
-- `/Users/matthewrance/Documents/hiswalks/CLAUDE.md` — project instructions
-- `/Users/matthewrance/Documents/hiswalks/Wanderpast/` — Xcode project
+## Key files
+
+- `architecture.md` — product + technical architecture
+- `deferred_decisions.md` — what's out of scope
+- `CLAUDE.md` — project instructions
+- `Wanderpast/WanderpastCore/` — Swift Package with pure state machines (25 tests)
+- `Wanderpast/Wanderpast/Audio/AudioEngine.swift` — AVFoundation wrapper
+- `Wanderpast/Wanderpast/Location/LiveGeofenceManager.swift` — CoreLocation wrapper
+- `Wanderpast/Wanderpast/Tour/TourCoordinator.swift` — orchestrator (ObservableObject)
+- `Wanderpast/Wanderpast/Tour/InTourView.swift` — in-tour UI
 
 ## GitHub
 - Repo: https://github.com/TameImpy/WanderPast

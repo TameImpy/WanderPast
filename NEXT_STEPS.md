@@ -11,64 +11,122 @@
 - PRD submitted as GitHub issue #1 (https://github.com/TameImpy/WanderPast/issues/1)
 - 15 implementation issues created (#2-#16) as vertical slices
 - **Issue #2** (Xcode project skeleton) — done
-- **Issue #3** (AudioEngine) — done. AudioEngineState pure state machine with 10 tests
-- **Issue #4** (GeofenceManager) — done. GeofenceState pure state machine with 8 tests
-- **Issue #5** (Tracer Bullet) — partially done. TourService state machine with 7 tests. Framework wrappers built. End-to-end audio playback working in simulator with skip forward/backward
-- Design system fonts installed (Fraunces, Inter, JetBrains Mono)
-- Placeholder audio: medieval ambient soundscape (Freesound), TTS narration for 3 waypoints
-
-## Known issues to fix
-
-### Checkpoint resume (temporarily disabled)
-- `TourCoordinator.saveCheckpoint()` and `loadCheckpoint()` are commented out
-- Problem: after completing a tour, restarting the app skips all waypoints (shows "3 of 3")
-- **Fix needed:** add a "restart tour" button, or only resume if tour was abandoned mid-way (not completed)
-- Files: `Wanderpast/Wanderpast/Tour/TourCoordinator.swift` lines 170-177
-
-### Geofence triggering not working in simulator
-- Setting custom location via Features → Location → Custom Location doesn't trigger `didEnterRegion`
-- CoreLocation geofence monitoring is unreliable in the iOS Simulator
-- Skip forward button works as a workaround
-- **Fix options:** test on a real device, or add a development-mode "simulate geofence entry" button
-- The GPX file (`Resources/TowerOfLondonWalk.gpx`) also didn't work — Xcode's Debug → Simulate Location menu was greyed out
-
-### Skip backward doesn't work
-- Tapping skip backward has no visible effect
-- Likely the same issue as skip forward was — needs to handle the case where no waypoint is currently playing
-
-### Ambient audio sourcing
-- Current ambient is a Freesound placeholder — good enough for development
-- Production needs: properly mixed ambient per tour/era from Artlist or Epidemic Sound
-- Architecture.md specifies external sound designer (freelance) for final mix
-
-### Narration is TTS placeholder
-- All 3 waypoint narrations are macOS `say` command output
-- Production needs: real voice actors or ElevenLabs (for the AI experiment tour)
-
-## Next issues to tackle
-
-### Issue #5 remaining work
-- [ ] Get geofence triggering working (real device test or dev-mode simulate button)
-- [ ] Fix skip backward from idle state
-- [ ] Add "restart tour" flow
-- [ ] Test background audio (screen locked, app backgrounded)
-- [ ] Test lock screen media controls
-
-### Issue #6 onwards
-See GitHub issues #6-#16: https://github.com/TameImpy/WanderPast/issues
+- **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
+- **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
+- **Issue #5** (Tracer Bullet) — partially done (see below)
+- Design system: colours, spacing, typography tokens all implemented
+- Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
+- Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
 
 ---
 
-## Key files
+## Issue #5 — what's done vs what's remaining
 
-- `architecture.md` — product + technical architecture
-- `deferred_decisions.md` — what's out of scope
-- `CLAUDE.md` — project instructions
-- `Wanderpast/WanderpastCore/` — Swift Package with pure state machines (25 tests)
-- `Wanderpast/Wanderpast/Audio/AudioEngine.swift` — AVFoundation wrapper
-- `Wanderpast/Wanderpast/Location/LiveGeofenceManager.swift` — CoreLocation wrapper
-- `Wanderpast/Wanderpast/Tour/TourCoordinator.swift` — orchestrator (ObservableObject)
-- `Wanderpast/Wanderpast/Tour/InTourView.swift` — in-tour UI
+### Done
+- `TourService` state machine (7 tests, orchestrates AudioEngine + GeofenceManager)
+- `AudioEngine` — AVFoundation wrapper with dual-channel playback, lock screen controls, interruption handling
+- `LiveGeofenceManager` — CoreLocation wrapper with geofence registration
+- `TourCoordinator` — ObservableObject bridging pure logic to SwiftUI, with UserDefaults persistence (currently disabled)
+- `InTourView` — minimal in-tour UI: play/pause, skip forward/backward, waypoint indicator, close button
+- `TourDetailView` — "Start Tour" button navigates to InTourView
+- GPX simulation file for Tower of London walk (`Resources/TowerOfLondonWalk.gpx`)
+- Skip forward works from idle state (triggers first waypoint)
+- 25 total unit tests across 3 suites, all passing
+
+### Remaining for Issue #5
+- [ ] **Geofence triggering** — not working in simulator. CoreLocation `didEnterRegion` doesn't fire reliably. Needs real device testing or a dev-mode "simulate geofence entry" button
+- [ ] **Skip backward from idle** — tapping skip backward when no waypoint is playing does nothing. Same fix pattern as skip forward (trigger last waypoint or no-op)
+- [ ] **Checkpoint resume** — temporarily disabled (`TourCoordinator.swift` lines 170-177). Needs a "restart tour" button so completed tours can be replayed. Currently every app launch starts fresh
+- [ ] **Background audio** — Info.plist has `audio` background mode but not tested with screen locked
+- [ ] **Lock screen media controls** — MPNowPlayingInfoCenter is wired up but not tested
+- [ ] **Transition audio between waypoints** — the flow exists in the state machine but needs testing end-to-end
+
+---
+
+## Known bugs / tech debt
+
+| Issue | Detail | File(s) |
+|-------|--------|---------|
+| Simulator audio errors | `HALC_ProxyObjectMap::_CreateSystemObject: there is no system object` — intermittent simulator issue, not a code bug. Fix: erase simulator content and settings | N/A |
+| Simulator geofences unreliable | `didEnterRegion` doesn't fire when setting custom location. GPX simulation menu was greyed out in Xcode | `LiveGeofenceManager.swift` |
+| Checkpoint causes stale state | After completing tour, reopening app shows "3 of 3" with no way to restart. Save/load commented out as workaround | `TourCoordinator.swift` |
+| TourContentStatus rename | Renamed `TourStatus` → `TourContentStatus` in `Tour.swift` to avoid collision with WanderpastCore's `TourStatus`. Slightly awkward naming | `Models/Tour.swift` |
+
+---
+
+## Remaining GitHub issues (in priority order)
+
+### Core experience (do these next)
+- **Issue #6** — Tour catalogue: CDN fetch, city browsing, tour detail screen
+- **Issue #7** — Proximity-based discovery: nearby tours
+- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card
+
+### Auth & commerce
+- **Issue #8** — Sign in with Apple + user state persistence
+- **Issue #9** — IAP: individual tour purchase
+- **Issue #10** — IAP: city bundles and annual pass
+
+### Analytics & feedback
+- **Issue #13** — Firebase Analytics: 7 core events
+- **Issue #14** — TestFlight post-tour survey
+
+### Content
+- **Issue #12** — Wishlist: save tours for future trips
+- **Issue #15** — AI-produced Tower of London tour (ElevenLabs TTS, Claude/GPT scripts)
+- **Issue #16** — Sample content: 2-3 human-produced London tours (HITL — requires editorial)
+
+### Deferred (post-MVP)
+See `deferred_decisions.md` for full list. Key items:
+- Android build
+- Offline download
+- Gift purchases
+- Full interactive map
+- Immediate ID integration
+- Multi-language narration
+- User-generated content
+
+---
+
+## Project structure
+
+```
+Wanderpast/
+├── WanderpastCore/                    # Swift Package — pure testable logic
+│   ├── Sources/WanderpastCore/
+│   │   ├── AudioEngineState.swift     # Audio state machine (10 tests)
+│   │   ├── GeofenceState.swift        # GPS state machine (8 tests)
+│   │   └── TourService.swift          # Orchestrator state machine (7 tests)
+│   └── Tests/WanderpastCoreTests/
+├── Wanderpast/                        # Main iOS app
+│   ├── Audio/AudioEngine.swift        # AVFoundation wrapper
+│   ├── Location/LiveGeofenceManager.swift  # CoreLocation wrapper
+│   ├── Tour/
+│   │   ├── TourCoordinator.swift      # ObservableObject bridge to SwiftUI
+│   │   └── InTourView.swift           # In-tour UI
+│   ├── Models/                        # Tour, Waypoint, City, SampleData
+│   ├── DesignSystem/                  # Color, Typography, Spacing tokens
+│   ├── Resources/
+│   │   ├── Audio/                     # Bundled .m4a audio files
+│   │   ├── Fonts/                     # Fraunces, Inter, JetBrains Mono
+│   │   ├── sample_tour.json           # Hardcoded Tower of London tour
+│   │   └── TowerOfLondonWalk.gpx      # GPS simulation file
+│   ├── TourDetailView.swift           # Tour detail + "Start Tour"
+│   ├── WanderpastApp.swift            # App entry point
+│   └── Info.plist                     # Background modes, fonts, location strings
+```
+
+## Running the project
+
+1. Open `Wanderpast/Wanderpast.xcodeproj` in Xcode
+2. Select iPhone simulator, press Cmd + R
+3. Tap "Start Tour", then use skip forward to hear narration
+4. If simulator audio errors appear, do Device → Erase All Content and Settings and re-run
+
+## Running tests
+
+```bash
+cd Wanderpast/WanderpastCore && swift test
+```
 
 ## GitHub
 - Repo: https://github.com/TameImpy/WanderPast

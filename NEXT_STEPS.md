@@ -14,6 +14,7 @@
 - **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
 - **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
 - **Issue #5** (Tracer Bullet) — partially done (see below)
+- **Issue #6** (Tour catalogue) — backend slices 0–6 done. 32 new tests covering parser, queries, cache policy, fetcher, cache, repository. UI slices 7–10 remaining (see below).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -54,10 +55,31 @@
 
 ---
 
+## Issue #6 — what's done vs what's remaining
+
+### Done (backend slices 0–6, all tests passing)
+- Codable models relocated to `WanderpastCore` and made public (`Tour`, `City`, `Waypoint`, `Catalogue`). `eraStartYear: Int` added to `Tour` for chronological sorting. `sample_tour.json` updated.
+- `CatalogueParser` — `parse(data:) throws -> Catalogue` with typed errors `.empty`, `.malformed`, `.invalid(field:)`
+- Query API on `Catalogue` — `publishedCities()`, `tours(in:)` with editorial pick first, `toursGroupedByEra()` sorted by `eraStartYear`, `tour(id:)`, `waypoints(for:)`, `editorialPick(for:)`
+- `CachePolicy` state machine — 1-hour TTL, decisions: `useCache | refetchAndUseFresh | refetchInBackgroundButShowCache | showError`
+- `CatalogueFetcher` — URLSession wrapper with typed errors `.notFound`, `.networkUnavailable`, `.timeout`, `.unexpectedResponse`
+- `CatalogueCache` — FileManager wrapper, save/load/lastFetchDate
+- `CatalogueRepository` — keystone: `loadCatalogue() -> AsyncStream<LoadResult>`. Yields `.fresh(Catalogue) | .cached(Catalogue, isStale:) | .failure(CatalogueLoadError)`. Stream may yield cached then fresh when stale + online. Parse failure preserves prior cache.
+
+### Remaining (UI slices 7–10)
+- [ ] **Slice 7** — `CityBrowseViewModel` (ObservableObject, wraps repository) + `CityBrowseView` SwiftUI screen. State: `.loading | .loaded([CityRow]) | .error(retryable:)`.
+- [ ] **Slice 8** — `TourListViewModel(cityID:)` (editorial pick first, flagged) and `ThemeBrowseViewModel` (groups by era). SwiftUI screens.
+- [ ] **Slice 9** — `TourDetailViewModel(tourID:)`. Upgrade `TourDetailView` with narrator block, hero image, static MapKit overview map (computes region from waypoint coords), 60-second `PreviewClipButton` (calls `AudioEngine.playPreviewClip(url:)`).
+- [ ] **Slice 10** — Boot `WanderpastApp` into `CityBrowseView`. App-wide error/loading states. Manual verification: airplane mode → error state, online → cities → tours → detail with map + preview, Start Tour still works.
+
+### Decisions locked in
+- CDN URL for testing: GitHub raw URL (`raw.githubusercontent.com/...`), to be set up when we wire repo into app
+- Cache TTL: 1 hour
+- Era ordering: `eraStartYear: Int` field on Tour (added)
+
 ## Remaining GitHub issues (in priority order)
 
 ### Core experience (do these next)
-- **Issue #6** — Tour catalogue: CDN fetch, city browsing, tour detail screen
 - **Issue #7** — Proximity-based discovery: nearby tours
 - **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card
 
@@ -91,28 +113,38 @@ See `deferred_decisions.md` for full list. Key items:
 
 ```
 Wanderpast/
-├── WanderpastCore/                    # Swift Package — pure testable logic
+├── WanderpastCore/                       # Swift Package — pure testable logic
 │   ├── Sources/WanderpastCore/
-│   │   ├── AudioEngineState.swift     # Audio state machine (10 tests)
-│   │   ├── GeofenceState.swift        # GPS state machine (8 tests)
-│   │   └── TourService.swift          # Orchestrator state machine (7 tests)
-│   └── Tests/WanderpastCoreTests/
-├── Wanderpast/                        # Main iOS app
-│   ├── Audio/AudioEngine.swift        # AVFoundation wrapper
+│   │   ├── AudioEngineState.swift        # Audio state machine (10 tests)
+│   │   ├── GeofenceState.swift           # GPS state machine (8 tests)
+│   │   ├── TourService.swift             # Orchestrator state machine (7 tests)
+│   │   ├── Tour.swift                    # Codable Tour + NarrationStyle/PriceTier/TourContentStatus
+│   │   ├── City.swift                    # Codable City
+│   │   ├── Waypoint.swift                # Codable Waypoint
+│   │   ├── Catalogue.swift               # Top-level { cities, tours, waypoints }
+│   │   ├── CatalogueParser.swift         # parse(data:) + typed errors (4 tests)
+│   │   ├── CatalogueQueries.swift        # publishedCities, tours(in:), grouped by era, etc. (8 tests)
+│   │   ├── CachePolicy.swift             # State machine for cache decisions (5 tests)
+│   │   ├── CatalogueFetcher.swift        # URLSession wrapper (4 tests)
+│   │   ├── CatalogueCache.swift          # FileManager wrapper (3 tests)
+│   │   └── CatalogueRepository.swift     # Composes fetch + cache + parse + policy (6 tests)
+│   └── Tests/WanderpastCoreTests/        # 57 tests total
+├── Wanderpast/                           # Main iOS app
+│   ├── Audio/AudioEngine.swift           # AVFoundation wrapper
 │   ├── Location/LiveGeofenceManager.swift  # CoreLocation wrapper
 │   ├── Tour/
-│   │   ├── TourCoordinator.swift      # ObservableObject bridge to SwiftUI
-│   │   └── InTourView.swift           # In-tour UI
-│   ├── Models/                        # Tour, Waypoint, City, SampleData
-│   ├── DesignSystem/                  # Color, Typography, Spacing tokens
+│   │   ├── TourCoordinator.swift         # ObservableObject bridge to SwiftUI
+│   │   └── InTourView.swift              # In-tour UI
+│   ├── Models/SampleData.swift           # Bundle.main loader for sample_tour.json
+│   ├── DesignSystem/                     # Color, Typography, Spacing tokens
 │   ├── Resources/
-│   │   ├── Audio/                     # Bundled .m4a audio files
-│   │   ├── Fonts/                     # Fraunces, Inter, JetBrains Mono
-│   │   ├── sample_tour.json           # Hardcoded Tower of London tour
-│   │   └── TowerOfLondonWalk.gpx      # GPS simulation file
-│   ├── TourDetailView.swift           # Tour detail + "Start Tour"
-│   ├── WanderpastApp.swift            # App entry point
-│   └── Info.plist                     # Background modes, fonts, location strings
+│   │   ├── Audio/                        # Bundled .m4a audio files
+│   │   ├── Fonts/                        # Fraunces, Inter, JetBrains Mono
+│   │   ├── sample_tour.json              # Hardcoded Tower of London tour
+│   │   └── TowerOfLondonWalk.gpx         # GPS simulation file
+│   ├── TourDetailView.swift              # Tour detail + "Start Tour"
+│   ├── WanderpastApp.swift               # App entry point
+│   └── Info.plist                        # Background modes, fonts, location strings
 ```
 
 ## Running the project

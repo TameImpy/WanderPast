@@ -17,6 +17,7 @@
       "city": "london",
       "theme": "Imprisonment & Power",
       "era": "Medieval — Tudor (1100–1600)",
+      "era_start_year": 1100,
       "narration_style": "present_tense_omniscient",
       "narrator_name": "Eleanor Vane",
       "narrator_bio": "Eleanor Vane is a historian of medieval incarceration and a former curator at the Tower of London. Her work focuses on the lives of political prisoners and the architecture of confinement.",

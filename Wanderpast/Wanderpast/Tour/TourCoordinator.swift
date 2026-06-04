@@ -10,7 +10,7 @@ final class TourCoordinator: ObservableObject {
     let audioEngine = AudioEngine()
     let geofenceManager = LiveGeofenceManager()
 
-    private var tourContent: TourContent?
+    private var catalogue: Catalogue?
     private var waypoints: [Waypoint] = []
 
     /// Map from waypoint ID to its bundled audio filename (without extension)
@@ -34,7 +34,7 @@ final class TourCoordinator: ObservableObject {
 
     func startTour() {
         let content = SampleData.load()
-        tourContent = content
+        catalogue = content
         let tour = content.tours[0]
         waypoints = content.waypoints.sorted { $0.order < $1.order }
 
@@ -168,7 +168,7 @@ final class TourCoordinator: ObservableObject {
 
     private func saveCheckpoint() {
         // Disabled during development — re-enable for production
-        // guard let tour = tourContent?.tours.first else { return }
+        // guard let tour = catalogue?.tours.first else { return }
         // UserDefaults.standard.set(service.completedWaypointIDs.count, forKey: "checkpoint_\(tour.id)")
     }
 

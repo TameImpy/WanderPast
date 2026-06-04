@@ -10,9 +10,6 @@
 		A10001 /* WanderpastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001 /* WanderpastApp.swift */; };
 		A10002 /* TourDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002 /* TourDetailView.swift */; };
 		A10003 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003 /* LaunchScreen.swift */; };
-		A10004 /* Tour.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004 /* Tour.swift */; };
-		A10005 /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10005 /* Waypoint.swift */; };
-		A10006 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10006 /* City.swift */; };
 		A10007 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007 /* SampleData.swift */; };
 		A10008 /* Color+Wanderpast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008 /* Color+Wanderpast.swift */; };
 		A10009 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* Typography.swift */; };
@@ -42,9 +39,6 @@
 		B10001 /* WanderpastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WanderpastApp.swift; sourceTree = "<group>"; };
 		B10002 /* TourDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailView.swift; sourceTree = "<group>"; };
 		B10003 /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
-		B10004 /* Tour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tour.swift; sourceTree = "<group>"; };
-		B10005 /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
-		B10006 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		B10007 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		B10008 /* Color+Wanderpast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Wanderpast.swift"; sourceTree = "<group>"; };
 		B10009 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
@@ -113,9 +107,6 @@
 		D10003 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B10004 /* Tour.swift */,
-				B10005 /* Waypoint.swift */,
-				B10006 /* City.swift */,
 				B10007 /* SampleData.swift */,
 			);
 			path = Models;
@@ -298,9 +289,6 @@
 				A10001 /* WanderpastApp.swift in Sources */,
 				A10002 /* TourDetailView.swift in Sources */,
 				A10003 /* LaunchScreen.swift in Sources */,
-				A10004 /* Tour.swift in Sources */,
-				A10005 /* Waypoint.swift in Sources */,
-				A10006 /* City.swift in Sources */,
 				A10007 /* SampleData.swift in Sources */,
 				A10008 /* Color+Wanderpast.swift in Sources */,
 				A10009 /* Typography.swift in Sources */,

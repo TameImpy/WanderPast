@@ -1,14 +1,13 @@
 import Foundation
 
-/// A city that hosts one or more Wanderpast tours.
-struct City: Codable, Identifiable {
-    let id: String
-    let name: String
-    let description: String
-    let heroImageURL: URL?
-    let tourCount: Int
-    let editorialPickTourID: String?
-    let generalAccessibilityNote: String?
+public struct City: Codable, Identifiable, Sendable {
+    public let id: String
+    public let name: String
+    public let description: String
+    public let heroImageURL: URL?
+    public let tourCount: Int
+    public let editorialPickTourID: String?
+    public let generalAccessibilityNote: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name, description

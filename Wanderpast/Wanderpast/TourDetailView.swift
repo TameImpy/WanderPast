@@ -1,4 +1,5 @@
 import SwiftUI
+import WanderpastCore
 
 /// Displays the sample tour metadata styled with Wanderpast design tokens.
 struct TourDetailView: View {

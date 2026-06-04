@@ -14,7 +14,7 @@
 - **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
 - **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
 - **Issue #5** (Tracer Bullet) — partially done (see below)
-- **Issue #6** (Tour catalogue) — backend slices 0–6 done. 32 new tests covering parser, queries, cache policy, fetcher, cache, repository. UI slices 7–10 remaining (see below).
+- **Issue #6** (Tour catalogue) — backend slices 0–6 done and Slice 7 (CityBrowseViewModel + CityBrowseView) done. 65 tests in 10 suites covering parser, queries (incl. cityRows), cache policy, fetcher, cache, repository, and CityBrowseState mapping. UI slices 8–10 remaining (see below).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -57,18 +57,22 @@
 
 ## Issue #6 — what's done vs what's remaining
 
-### Done (backend slices 0–6, all tests passing)
+### Done (backend slices 0–6 + UI slice 7, all tests passing)
 - Codable models relocated to `WanderpastCore` and made public (`Tour`, `City`, `Waypoint`, `Catalogue`). `eraStartYear: Int` added to `Tour` for chronological sorting. `sample_tour.json` updated.
 - `CatalogueParser` — `parse(data:) throws -> Catalogue` with typed errors `.empty`, `.malformed`, `.invalid(field:)`
-- Query API on `Catalogue` — `publishedCities()`, `tours(in:)` with editorial pick first, `toursGroupedByEra()` sorted by `eraStartYear`, `tour(id:)`, `waypoints(for:)`, `editorialPick(for:)`
+- Query API on `Catalogue` — `publishedCities()`, `cityRows()` (rows with derived published-tour count), `tours(in:)` with editorial pick first, `toursGroupedByEra()` sorted by `eraStartYear`, `tour(id:)`, `waypoints(for:)`, `editorialPick(for:)`
 - `CachePolicy` state machine — 1-hour TTL, decisions: `useCache | refetchAndUseFresh | refetchInBackgroundButShowCache | showError`
 - `CatalogueFetcher` — URLSession wrapper with typed errors `.notFound`, `.networkUnavailable`, `.timeout`, `.unexpectedResponse`
 - `CatalogueCache` — FileManager wrapper, save/load/lastFetchDate
 - `CatalogueRepository` — keystone: `loadCatalogue() -> AsyncStream<LoadResult>`. Yields `.fresh(Catalogue) | .cached(Catalogue, isStale:) | .failure(CatalogueLoadError)`. Stream may yield cached then fresh when stale + online. Parse failure preserves prior cache.
+- **Slice 7 — CityBrowseViewModel + CityBrowseView**
+  - `CityRow` + `Catalogue.cityRows()` in Core (3 tests): one row per city with at least one published tour, order preserved, count derived from catalogue rather than the static field
+  - `CityBrowseState` pure enum + `CityBrowseState.from(loadResult:)` mapper in Core (5 tests): `.fresh`/`.cached` → `.loaded`, `.offline`/`.fetchFailed` → `.error(retryable: true)`, `.parseFailed` → `.error(retryable: false)`
+  - `CityBrowseViewModel` ObservableObject (main app) — `@MainActor`, consumes the repo stream into `@Published state`, cancels prior load on retry
+  - `CityBrowseView` SwiftUI screen — `EXPLORE / Cities` header, city cards with hero image + tour count overlay, loading and error states with Retry button
 
-### Remaining (UI slices 7–10)
-- [ ] **Slice 7** — `CityBrowseViewModel` (ObservableObject, wraps repository) + `CityBrowseView` SwiftUI screen. State: `.loading | .loaded([CityRow]) | .error(retryable:)`.
-- [ ] **Slice 8** — `TourListViewModel(cityID:)` (editorial pick first, flagged) and `ThemeBrowseViewModel` (groups by era). SwiftUI screens.
+### Remaining (UI slices 8–10)
+- [ ] **Slice 8** — `TourListViewModel(cityID:)` (editorial pick first, flagged) and `ThemeBrowseViewModel` (groups by era). SwiftUI screens. Tap target wires from `CityBrowseView` city card.
 - [ ] **Slice 9** — `TourDetailViewModel(tourID:)`. Upgrade `TourDetailView` with narrator block, hero image, static MapKit overview map (computes region from waypoint coords), 60-second `PreviewClipButton` (calls `AudioEngine.playPreviewClip(url:)`).
 - [ ] **Slice 10** — Boot `WanderpastApp` into `CityBrowseView`. App-wide error/loading states. Manual verification: airplane mode → error state, online → cities → tours → detail with map + preview, Start Tour still works.
 
@@ -127,14 +131,18 @@ Wanderpast/
 │   │   ├── CachePolicy.swift             # State machine for cache decisions (5 tests)
 │   │   ├── CatalogueFetcher.swift        # URLSession wrapper (4 tests)
 │   │   ├── CatalogueCache.swift          # FileManager wrapper (3 tests)
-│   │   └── CatalogueRepository.swift     # Composes fetch + cache + parse + policy (6 tests)
-│   └── Tests/WanderpastCoreTests/        # 57 tests total
+│   │   ├── CatalogueRepository.swift     # Composes fetch + cache + parse + policy (6 tests)
+│   │   └── CityBrowseState.swift         # Pure mapper LoadResult → browse state (5 tests)
+│   └── Tests/WanderpastCoreTests/        # 65 tests total in 10 suites
 ├── Wanderpast/                           # Main iOS app
 │   ├── Audio/AudioEngine.swift           # AVFoundation wrapper
 │   ├── Location/LiveGeofenceManager.swift  # CoreLocation wrapper
 │   ├── Tour/
 │   │   ├── TourCoordinator.swift         # ObservableObject bridge to SwiftUI
 │   │   └── InTourView.swift              # In-tour UI
+│   ├── Browse/
+│   │   ├── CityBrowseViewModel.swift     # ObservableObject — wraps CatalogueRepository
+│   │   └── CityBrowseView.swift          # SwiftUI screen — list of city cards
 │   ├── Models/SampleData.swift           # Bundle.main loader for sample_tour.json
 │   ├── DesignSystem/                     # Color, Typography, Spacing tokens
 │   ├── Resources/

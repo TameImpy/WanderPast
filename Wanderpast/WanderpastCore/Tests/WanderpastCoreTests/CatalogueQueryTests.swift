@@ -125,6 +125,63 @@ struct CatalogueQueryTests {
         #expect(groups.first(where: { $0.era == "Medieval" })?.tours.map(\.id) == ["tower"])
     }
 
+    @Test("cityRows returns one row per published city, preserving input order")
+    func cityRowsReturnsOneRowPerPublishedCityInOrder() {
+        let london = makeCity(id: "london")
+        let york = makeCity(id: "york")
+        let bath = makeCity(id: "bath")
+        let publishedLondon = makeTour(id: "tower", cityID: "london", status: .published)
+        let draftYork = makeTour(id: "york-mystery", cityID: "york", status: .draft)
+        let publishedBath = makeTour(id: "bath-romans", cityID: "bath", status: .published)
+        let catalogue = Catalogue(
+            cities: [london, york, bath],
+            tours: [publishedLondon, draftYork, publishedBath],
+            waypoints: []
+        )
+
+        let rows = catalogue.cityRows()
+
+        #expect(rows.map(\.id) == ["london", "bath"])
+    }
+
+    @Test("cityRows.publishedTourCount counts only published tours, not the static field")
+    func cityRowsCountsPublishedToursOnly() {
+        let london = makeCity(id: "london", tourCount: 99)
+        let publishedA = makeTour(id: "a", cityID: "london", status: .published)
+        let publishedB = makeTour(id: "b", cityID: "london", status: .published)
+        let draft = makeTour(id: "c", cityID: "london", status: .draft)
+        let archived = makeTour(id: "d", cityID: "london", status: .archived)
+        let catalogue = Catalogue(
+            cities: [london],
+            tours: [publishedA, publishedB, draft, archived],
+            waypoints: []
+        )
+
+        let rows = catalogue.cityRows()
+
+        #expect(rows.count == 1)
+        #expect(rows.first?.publishedTourCount == 2)
+    }
+
+    @Test("cityRows maps name, description, and heroImageURL from the source city")
+    func cityRowsMapsCityFields() {
+        let heroURL = URL(string: "https://example.com/london.jpg")!
+        let london = makeCity(
+            id: "london",
+            name: "London",
+            description: "The capital",
+            heroImageURL: heroURL
+        )
+        let tour = makeTour(id: "tower", cityID: "london", status: .published)
+        let catalogue = Catalogue(cities: [london], tours: [tour], waypoints: [])
+
+        let rows = catalogue.cityRows()
+
+        #expect(rows.first?.name == "London")
+        #expect(rows.first?.description == "The capital")
+        #expect(rows.first?.heroImageURL == heroURL)
+    }
+
     @Test("publishedCities excludes cities whose only tours are draft or archived")
     func publishedCitiesExcludesCitiesWithoutPublishedTours() {
         let london = makeCity(id: "london")
@@ -149,14 +206,18 @@ struct CatalogueQueryTests {
 
 private func makeCity(
     id: String,
+    name: String? = nil,
+    description: String = "desc",
+    heroImageURL: URL? = nil,
+    tourCount: Int = 1,
     editorialPickTourID: String? = nil
 ) -> City {
     City(
         id: id,
-        name: id.capitalized,
-        description: "desc",
-        heroImageURL: nil,
-        tourCount: 1,
+        name: name ?? id.capitalized,
+        description: description,
+        heroImageURL: heroImageURL,
+        tourCount: tourCount,
         editorialPickTourID: editorialPickTourID,
         generalAccessibilityNote: nil
     )

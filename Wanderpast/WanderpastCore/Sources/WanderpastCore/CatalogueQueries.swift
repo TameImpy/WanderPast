@@ -6,6 +6,28 @@ public struct EraGroup: Sendable, Equatable {
     public let tours: [Tour]
 }
 
+public struct CityRow: Identifiable, Equatable, Sendable {
+    public let id: String
+    public let name: String
+    public let description: String
+    public let heroImageURL: URL?
+    public let publishedTourCount: Int
+
+    public init(
+        id: String,
+        name: String,
+        description: String,
+        heroImageURL: URL?,
+        publishedTourCount: Int
+    ) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.heroImageURL = heroImageURL
+        self.publishedTourCount = publishedTourCount
+    }
+}
+
 extension Tour: Equatable {
     public static func == (lhs: Tour, rhs: Tour) -> Bool { lhs.id == rhs.id }
 }
@@ -53,6 +75,26 @@ extension Catalogue {
                 return EraGroup(era: era, eraStartYear: year, tours: tours)
             }
             .sorted { $0.eraStartYear < $1.eraStartYear }
+    }
+
+    /// Rows for the city browse screen — one per city with at least one published tour,
+    /// with `publishedTourCount` derived from the catalogue rather than the static field.
+    /// Preserves the catalogue's city ordering.
+    public func cityRows() -> [CityRow] {
+        var publishedCountByCity: [String: Int] = [:]
+        for tour in tours where tour.status == .published {
+            publishedCountByCity[tour.city, default: 0] += 1
+        }
+        return cities.compactMap { city in
+            guard let count = publishedCountByCity[city.id], count > 0 else { return nil }
+            return CityRow(
+                id: city.id,
+                name: city.name,
+                description: city.description,
+                heroImageURL: city.heroImageURL,
+                publishedTourCount: count
+            )
+        }
     }
 
     /// The city's editorial pick tour, if one is set and currently published.

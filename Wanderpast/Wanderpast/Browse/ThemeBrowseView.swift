@@ -1,10 +1,9 @@
 import SwiftUI
 import WanderpastCore
 
-/// Top-level browse screen: lists UK towns and cities with published tours.
-struct CityBrowseView: View {
-    @ObservedObject var viewModel: CityBrowseViewModel
-    let repository: CatalogueRepository
+/// Lists tours grouped by era, sorted chronologically. Used as a sibling entry point to CityBrowseView.
+struct ThemeBrowseView: View {
+    @ObservedObject var viewModel: ThemeBrowseViewModel
 
     var body: some View {
         ScrollView {
@@ -23,15 +22,13 @@ struct CityBrowseView: View {
         }
     }
 
-    // MARK: - Sections
-
     private var header: some View {
         VStack(alignment: .leading, spacing: WPSpacing.xxs) {
-            Text("EXPLORE")
+            Text("BROWSE BY")
                 .font(.overline)
                 .tracking(2)
                 .foregroundStyle(Color.terracotta)
-            Text("Cities")
+            Text("Era")
                 .font(.displayLarge)
                 .foregroundStyle(Color.deepInk)
         }
@@ -42,8 +39,8 @@ struct CityBrowseView: View {
         switch viewModel.state {
         case .loading:
             loadingView
-        case .loaded(let rows):
-            list(of: rows)
+        case .loaded(let groups):
+            list(of: groups)
         case .error(let retryable):
             errorView(retryable: retryable)
         }
@@ -61,73 +58,64 @@ struct CityBrowseView: View {
         .frame(maxWidth: .infinity, minHeight: 240)
     }
 
-    private func list(of rows: [CityRow]) -> some View {
-        LazyVStack(spacing: WPSpacing.md) {
-            ForEach(rows) { row in
-                NavigationLink {
-                    TourListView(
-                        viewModel: TourListViewModel(cityID: row.id, repository: repository),
-                        cityName: row.name
-                    )
-                } label: {
-                    cityCard(row)
-                }
-                .buttonStyle(.plain)
-            }
-        }
-    }
-
-    private func cityCard(_ row: CityRow) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .bottomLeading) {
-                if let url = row.heroImageURL {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        default:
-                            Color.charcoal
-                        }
+    private func list(of groups: [EraGroup]) -> some View {
+        LazyVStack(alignment: .leading, spacing: WPSpacing.xl) {
+            ForEach(groups, id: \.era) { group in
+                VStack(alignment: .leading, spacing: WPSpacing.sm) {
+                    HStack(alignment: .firstTextBaseline, spacing: WPSpacing.xs) {
+                        Text(group.era)
+                            .font(.displaySmall)
+                            .foregroundStyle(Color.deepInk)
+                        Text("FROM \(group.eraStartYear)")
+                            .font(.monoSmall)
+                            .tracking(1)
+                            .foregroundStyle(Color.stone)
                     }
-                    .frame(height: 180)
-                    .clipped()
-                } else {
-                    Color.charcoal
-                        .frame(height: 180)
+                    ForEach(group.tours) { tour in
+                        tourCard(tour)
+                    }
                 }
-
-                LinearGradient(
-                    colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.7)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 180)
-
-                VStack(alignment: .leading, spacing: WPSpacing.xxxs) {
-                    Text(row.name)
-                        .font(.displayMedium)
-                        .foregroundStyle(Color.warmPaper)
-                    Text(tourCountLabel(row.publishedTourCount))
-                        .font(.overline)
-                        .tracking(1.5)
-                        .foregroundStyle(Color.sandstone)
-                }
-                .padding(WPSpacing.sm)
             }
-
-            Text(row.description)
-                .font(.bodySecondary)
-                .foregroundStyle(Color.deepInk)
-                .lineSpacing(4)
-                .padding(WPSpacing.sm)
-                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(Color.parchment)
-        .clipShape(RoundedRectangle(cornerRadius: WPRadius.lg))
     }
 
-    private func tourCountLabel(_ count: Int) -> String {
-        count == 1 ? "1 TOUR" : "\(count) TOURS"
+    private func tourCard(_ tour: Tour) -> some View {
+        HStack(alignment: .top, spacing: WPSpacing.sm) {
+            if let url = tour.heroImageURL {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    default:
+                        Color.charcoal
+                    }
+                }
+                .frame(width: 84, height: 84)
+                .clipShape(RoundedRectangle(cornerRadius: WPRadius.sm))
+            } else {
+                Color.charcoal
+                    .frame(width: 84, height: 84)
+                    .clipShape(RoundedRectangle(cornerRadius: WPRadius.sm))
+            }
+
+            VStack(alignment: .leading, spacing: WPSpacing.xxs) {
+                Text(tour.city.uppercased())
+                    .font(.overline)
+                    .tracking(1.2)
+                    .foregroundStyle(Color.terracotta)
+                Text(tour.title)
+                    .font(.bodyPrimary)
+                    .foregroundStyle(Color.deepInk)
+                    .lineLimit(2)
+                Text("\(tour.durationMinutes) MIN · \(tour.waypointCount) STOPS")
+                    .font(.monoSmall)
+                    .foregroundStyle(Color.stone)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(WPSpacing.sm)
+        .background(Color.parchment)
+        .clipShape(RoundedRectangle(cornerRadius: WPRadius.md))
     }
 
     private func errorView(retryable: Bool) -> some View {

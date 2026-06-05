@@ -14,7 +14,7 @@
 - **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
 - **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
 - **Issue #5** (Tracer Bullet) — partially done (see below)
-- **Issue #6** (Tour catalogue) — backend slices 0–6 done and Slice 7 (CityBrowseViewModel + CityBrowseView) done. 65 tests in 10 suites covering parser, queries (incl. cityRows), cache policy, fetcher, cache, repository, and CityBrowseState mapping. UI slices 8–10 remaining (see below).
+- **Issue #6** (Tour catalogue) — backend slices 0–6 done, Slice 7 (CityBrowseViewModel + CityBrowseView) done, and Slice 8 (TourListState/View + ThemeBrowseState/View + CityBrowse→TourList NavigationLink) done. Production `Wanderpast/Resources/catalogue.json` published at the GitHub raw URL with London (2 tours) + York (1 tour) + 10 waypoints. 77 tests in 12 suites. UI slices 9–10 remaining (see below).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -57,7 +57,7 @@
 
 ## Issue #6 — what's done vs what's remaining
 
-### Done (backend slices 0–6 + UI slice 7, all tests passing)
+### Done (backend slices 0–6 + UI slices 7–8, all tests passing)
 - Codable models relocated to `WanderpastCore` and made public (`Tour`, `City`, `Waypoint`, `Catalogue`). `eraStartYear: Int` added to `Tour` for chronological sorting. `sample_tour.json` updated.
 - `CatalogueParser` — `parse(data:) throws -> Catalogue` with typed errors `.empty`, `.malformed`, `.invalid(field:)`
 - Query API on `Catalogue` — `publishedCities()`, `cityRows()` (rows with derived published-tour count), `tours(in:)` with editorial pick first, `toursGroupedByEra()` sorted by `eraStartYear`, `tour(id:)`, `waypoints(for:)`, `editorialPick(for:)`
@@ -70,33 +70,17 @@
   - `CityBrowseState` pure enum + `CityBrowseState.from(loadResult:)` mapper in Core (5 tests): `.fresh`/`.cached` → `.loaded`, `.offline`/`.fetchFailed` → `.error(retryable: true)`, `.parseFailed` → `.error(retryable: false)`
   - `CityBrowseViewModel` ObservableObject (main app) — `@MainActor`, consumes the repo stream into `@Published state`, cancels prior load on retry
   - `CityBrowseView` SwiftUI screen — `EXPLORE / Cities` header, city cards with hero image + tour count overlay, loading and error states with Retry button
+- **Pre-slice TODO — `catalogue.json` published**
+  - `Wanderpast/Resources/catalogue.json` created and committed with London (2 published tours) + York (1 published tour) + 10 waypoints. Served at the GitHub raw URL Slice 10 will consume.
+- **Slice 8 — TourListView + ThemeBrowseView**
+  - `TourListState` pure enum + `TourListState.from(loadResult:cityID:)` mapper in Core (7 tests): editorial pick exposed separately and excluded from `others`; city-with-no-pick puts everything in `others`; unknown cityID yields empty `.loaded`; error mapping mirrors `CityBrowseState`.
+  - `ThemeBrowseState` pure enum + `ThemeBrowseState.from(loadResult:)` mapper in Core (5 tests): delegates to `Catalogue.toursGroupedByEra()`; same error mapping.
+  - `TourListViewModel(cityID:repository:)` and `ThemeBrowseViewModel(repository:)` ObservableObjects (main app) — `@MainActor`, consume the repo stream, cancel prior load on retry.
+  - `TourListView(viewModel:cityName:)` SwiftUI screen — `TOURS IN / <City>` header, FEATURED hero card for the editorial pick (full-bleed image + era + title overlay + description + metadata), MORE TOURS list of compact cards with thumbnail.
+  - `ThemeBrowseView(viewModel:)` SwiftUI screen — `BROWSE BY / Era` header, era sections with start year overline + tour cards. Not wired into the main flow yet — sibling entry point for later.
+  - `CityBrowseView` city card wrapped in `NavigationLink` to `TourListView(cityID:)`; `CityBrowseView` now also takes a `repository:` parameter so it can construct child VMs.
 
-### Remaining (UI slices 8–10)
-
-#### Pre-slice TODO — publish `catalogue.json`
-Slice 10 assumes a hosted catalogue.json. Before Slice 10 (ideally during Slice 8 so Slice 9 can also point at it) we need to:
-- Create `Wanderpast/Resources/catalogue.json` by extending `sample_tour.json` to the `{ cities, tours, waypoints }` shape that `CatalogueParser` expects. London should remain present (so the existing Tower tour keeps working), but add at least one extra city + one extra tour so `CityBrowseView` and `TourListView` aren't trivially single-item.
-- Commit it to the repo so it's reachable at `https://raw.githubusercontent.com/TameImpy/WanderPast/main/Wanderpast/Resources/catalogue.json`.
-- Bundle it as well so the first launch has something to parse even before any network call (Slice 10 will decide whether to seed the cache from the bundle or just rely on the fetcher).
-
-#### Slice 8 — Tour list per city + theme browse
-Pure logic in `WanderpastCore` (TDD, follow the Slice 7 pattern):
-- `TourListState` enum: `.loading | .loaded(editorialPick: Tour?, others: [Tour]) | .error(retryable:)`. Editorial pick is exposed separately so the UI can render a hero card. `others` must exclude the pick to avoid double-rendering. Pure `from(loadResult:cityID:)` mapper.
-- `ThemeBrowseState` enum: `.loading | .loaded([EraGroup]) | .error(retryable:)`. Pure `from(loadResult:)` mapper that delegates to `Catalogue.toursGroupedByEra()` (already exists).
-- Tests cover: editorial pick is excluded from `others`; city with no pick puts everything in `others`; same error mapping rules as `CityBrowseState`.
-
-Main app (`Wanderpast/Browse/`):
-- `TourListViewModel(cityID:repository:)` — `@MainActor` ObservableObject, same `load()`/`retry()` pattern as `CityBrowseViewModel`.
-- `ThemeBrowseViewModel(repository:)` — same shape.
-- `TourListView(viewModel:)` SwiftUI screen — header with city name; if `editorialPick` non-nil, render a "Featured" hero card; below it a `LazyVStack` of regular tour cards. Loading and retryable error states.
-- `ThemeBrowseView(viewModel:)` SwiftUI screen — list of era sections (era label + start year overline, then tour cards).
-
-Navigation wiring:
-- Make `CityBrowseView`'s city card a `NavigationLink` (or set a `selectedCity` binding that drives `.navigationDestination`) pushing `TourListView(cityID:)`. Repository is passed through the environment or constructor.
-- Don't wire ThemeBrowse into the main flow yet — it's a sibling entry point we'll surface later. Just make sure it compiles and previews.
-
-Project plumbing:
-- Update `project.pbxproj` to register the new files (uses traditional file references; folders are not auto-synchronized — see how Slice 7 added `Browse/`).
+### Remaining (UI slices 9–10)
 
 #### Slice 9 — Real `TourDetailView` driven by the catalogue
 Pure logic in `WanderpastCore`:
@@ -183,8 +167,12 @@ Wanderpast/
 │   │   ├── CatalogueFetcher.swift        # URLSession wrapper (4 tests)
 │   │   ├── CatalogueCache.swift          # FileManager wrapper (3 tests)
 │   │   ├── CatalogueRepository.swift     # Composes fetch + cache + parse + policy (6 tests)
-│   │   └── CityBrowseState.swift         # Pure mapper LoadResult → browse state (5 tests)
-│   └── Tests/WanderpastCoreTests/        # 65 tests total in 10 suites
+│   │   ├── CityBrowseState.swift         # Pure mapper LoadResult → browse state (5 tests)
+│   │   ├── TourListState.swift           # Pure mapper LoadResult + cityID → tour-list state (7 tests)
+│   │   └── ThemeBrowseState.swift        # Pure mapper LoadResult → theme-browse state (5 tests)
+│   └── Tests/WanderpastCoreTests/        # 77 tests total in 12 suites
+├── Resources/                            # Repo-level resources (served via GitHub raw URL)
+│   └── catalogue.json                    # Production catalogue: London + York, 3 tours, 10 waypoints
 ├── Wanderpast/                           # Main iOS app
 │   ├── Audio/AudioEngine.swift           # AVFoundation wrapper
 │   ├── Location/LiveGeofenceManager.swift  # CoreLocation wrapper
@@ -193,13 +181,17 @@ Wanderpast/
 │   │   └── InTourView.swift              # In-tour UI
 │   ├── Browse/
 │   │   ├── CityBrowseViewModel.swift     # ObservableObject — wraps CatalogueRepository
-│   │   └── CityBrowseView.swift          # SwiftUI screen — list of city cards
+│   │   ├── CityBrowseView.swift          # SwiftUI screen — list of city cards (NavigationLink → TourListView)
+│   │   ├── TourListViewModel.swift       # ObservableObject — per-city tour list
+│   │   ├── TourListView.swift            # SwiftUI screen — featured hero + more tours
+│   │   ├── ThemeBrowseViewModel.swift    # ObservableObject — era-grouped browse
+│   │   └── ThemeBrowseView.swift         # SwiftUI screen — era sections (sibling entry, not wired yet)
 │   ├── Models/SampleData.swift           # Bundle.main loader for sample_tour.json
 │   ├── DesignSystem/                     # Color, Typography, Spacing tokens
 │   ├── Resources/
 │   │   ├── Audio/                        # Bundled .m4a audio files
 │   │   ├── Fonts/                        # Fraunces, Inter, JetBrains Mono
-│   │   ├── sample_tour.json              # Hardcoded Tower of London tour
+│   │   ├── sample_tour.json              # Hardcoded Tower of London tour (legacy; SampleData still uses it)
 │   │   └── TowerOfLondonWalk.gpx         # GPS simulation file
 │   ├── TourDetailView.swift              # Tour detail + "Start Tour"
 │   ├── WanderpastApp.swift               # App entry point

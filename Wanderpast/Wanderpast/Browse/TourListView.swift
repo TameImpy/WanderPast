@@ -114,26 +114,30 @@ struct TourListView: View {
     private func heroCard(_ tour: Tour) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .bottomLeading) {
-                if let url = tour.heroImageURL {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        default:
-                            Color.charcoal
+                Group {
+                    if let url = tour.heroImageURL {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            default:
+                                Color.charcoal
+                            }
                         }
+                    } else {
+                        Color.charcoal
                     }
-                    .frame(height: 220)
-                    .clipped()
-                } else {
-                    Color.charcoal.frame(height: 220)
                 }
+                .frame(maxWidth: .infinity)
+                .frame(height: 220)
+                .clipped()
 
                 LinearGradient(
                     colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.75)],
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                .frame(maxWidth: .infinity)
                 .frame(height: 220)
 
                 VStack(alignment: .leading, spacing: WPSpacing.xxs) {
@@ -145,6 +149,7 @@ struct TourListView: View {
                         .font(.displayMedium)
                         .foregroundStyle(Color.warmPaper)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(WPSpacing.sm)
             }
 

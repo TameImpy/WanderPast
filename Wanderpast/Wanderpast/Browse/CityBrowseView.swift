@@ -81,27 +81,30 @@ struct CityBrowseView: View {
     private func cityCard(_ row: CityRow) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .bottomLeading) {
-                if let url = row.heroImageURL {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        default:
-                            Color.charcoal
+                Group {
+                    if let url = row.heroImageURL {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            default:
+                                Color.charcoal
+                            }
                         }
+                    } else {
+                        Color.charcoal
                     }
-                    .frame(height: 180)
-                    .clipped()
-                } else {
-                    Color.charcoal
-                        .frame(height: 180)
                 }
+                .frame(maxWidth: .infinity)
+                .frame(height: 180)
+                .clipped()
 
                 LinearGradient(
                     colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.7)],
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                .frame(maxWidth: .infinity)
                 .frame(height: 180)
 
                 VStack(alignment: .leading, spacing: WPSpacing.xxxs) {
@@ -113,6 +116,7 @@ struct CityBrowseView: View {
                         .tracking(1.5)
                         .foregroundStyle(Color.sandstone)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(WPSpacing.sm)
             }
 

@@ -49,26 +49,30 @@ struct TourDetailView: View {
 
     private func heroBanner(_ tour: Tour) -> some View {
         ZStack(alignment: .bottomLeading) {
-            if let url = tour.heroImageURL {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    default:
-                        Color.charcoal
+            Group {
+                if let url = tour.heroImageURL {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image.resizable().scaledToFill()
+                        default:
+                            Color.charcoal
+                        }
                     }
+                } else {
+                    Color.charcoal
                 }
-                .frame(height: 320)
-                .clipped()
-            } else {
-                Color.charcoal.frame(height: 320)
             }
+            .frame(maxWidth: .infinity)
+            .frame(height: 320)
+            .clipped()
 
             LinearGradient(
                 colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.85)],
                 startPoint: .top,
                 endPoint: .bottom
             )
+            .frame(maxWidth: .infinity)
             .frame(height: 320)
 
             VStack(alignment: .leading, spacing: WPSpacing.xxs) {
@@ -81,8 +85,10 @@ struct TourDetailView: View {
                     .font(.displayLarge)
                     .foregroundStyle(Color.warmPaper)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(WPSpacing.md)
         }
+        .frame(maxWidth: .infinity)
     }
 
     private func metadataStrip(_ tour: Tour) -> some View {

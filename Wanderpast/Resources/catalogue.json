@@ -1,0 +1,199 @@
+{
+  "cities": [
+    {
+      "id": "london",
+      "name": "London",
+      "description": "From Roman Londinium to the Blitz, the capital's layers of history hide in plain sight. Wanderpast tours thread through the streets where it all happened — stand where the past still echoes.",
+      "hero_image_url": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&q=80",
+      "tour_count": 2,
+      "editorial_pick_tour_id": "tower-of-london-prisoners",
+      "general_accessibility_note": "Most Tower-area tours follow paved paths. Cobblestone sections around Tower Hill may be uneven. Step-free alternatives are noted per waypoint."
+    },
+    {
+      "id": "york",
+      "name": "York",
+      "description": "Roman Eboracum, Viking Jorvik, medieval seat of the north — York wears its centuries in plain sight. The city walls still mark the line the Romans drew, and the Shambles' tight crooked timbers haven't moved since the 1300s.",
+      "hero_image_url": "https://images.unsplash.com/photo-1597215669893-a64b89eafdc8?w=1200&q=80",
+      "tour_count": 1,
+      "editorial_pick_tour_id": "york-jorvik-walk",
+      "general_accessibility_note": "York's medieval streets are mostly flat but heavily cobbled. The city walls have steps; a step-free ground route is provided in parallel."
+    }
+  ],
+  "tours": [
+    {
+      "id": "tower-of-london-prisoners",
+      "title": "The Prisoners of the Tower",
+      "city": "london",
+      "theme": "Imprisonment & Power",
+      "era": "Medieval — Tudor (1100–1600)",
+      "era_start_year": 1100,
+      "narration_style": "present_tense_omniscient",
+      "narrator_name": "Eleanor Vane",
+      "narrator_bio": "Eleanor Vane is a historian of medieval incarceration and a former curator at the Tower of London. Her work focuses on the lives of political prisoners and the architecture of confinement.",
+      "duration_minutes": 35,
+      "waypoint_count": 3,
+      "description": "Step inside the walls where kings locked away their rivals, where Anne Boleyn spent her final nights, and where the inscription-carved stones still carry the desperation of the condemned. This tour traces the Tower's history not as a fortress or palace, but as England's most feared prison.",
+      "preview_clip_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/preview.mp3",
+      "ambient_soundscape_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/ambient.mp3",
+      "completion_summary": "You've walked through five centuries of confinement at the Tower of London. From the earliest Norman dungeon beneath the White Tower to the Tudor-era inscriptions in the Beauchamp Tower, the stones around you have absorbed the fear, defiance, and last hopes of England's most notable prisoners. Anne Boleyn walked these same paths in May 1536. Sir Walter Raleigh paced these walls for thirteen years. Their stories are carved — literally — into the fabric of this place.",
+      "hero_image_url": "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=1200&q=80",
+      "is_free": true,
+      "price_tier": "free",
+      "status": "published"
+    },
+    {
+      "id": "london-blitz-thames",
+      "title": "The Blitz Along the Thames",
+      "city": "london",
+      "theme": "War & Resilience",
+      "era": "Twentieth Century (1900–2000)",
+      "era_start_year": 1940,
+      "narration_style": "character_led_first_person",
+      "narrator_name": "Tom Kearney",
+      "narrator_bio": "Tom Kearney is an oral historian whose work centres the voices of Londoners who lived through the Second World War. He has spent two decades recording survivors of the Blitz.",
+      "duration_minutes": 42,
+      "waypoint_count": 4,
+      "description": "September 1940 to May 1941. Fifty-seven consecutive nights of bombing, then months more. This walk follows the Thames from St Paul's to the South Bank, retracing the routes Londoners took to shelters, to ARP posts, to the next morning's smouldering streets — guided by the voices of those who lived it.",
+      "preview_clip_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/preview.mp3",
+      "ambient_soundscape_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/ambient.mp3",
+      "completion_summary": "You've walked the line the Luftwaffe drew across London — the river that guided the bombers in and lit the city up beneath them. The buildings around you survived because someone decided they would: fire watchers on St Paul's roof, ARP wardens running toward the next strike, ordinary people choosing to stay. The Blitz didn't end the city. It reshaped what Londoners thought a city was for.",
+      "hero_image_url": "https://images.unsplash.com/photo-1486299267070-83823f5448dd?w=1200&q=80",
+      "is_free": false,
+      "price_tier": "single",
+      "status": "published"
+    },
+    {
+      "id": "york-jorvik-walk",
+      "title": "Jorvik: York Under the Vikings",
+      "city": "york",
+      "theme": "Conquest & Trade",
+      "era": "Early Medieval (600–1100)",
+      "era_start_year": 866,
+      "narration_style": "expert_led",
+      "narrator_name": "Dr Aisling Murray",
+      "narrator_bio": "Dr Aisling Murray is an archaeologist specialising in Viking-age Britain. She led excavations at Coppergate and has written extensively on Anglo-Scandinavian York.",
+      "duration_minutes": 38,
+      "waypoint_count": 3,
+      "description": "In 866 a Great Heathen Army took the Roman walls of York and renamed the city Jorvik. For two centuries it was the second-largest settlement in Britain — a trading port whose reach ran from the Caspian to the Atlantic. This walk traces what's left, from the Coppergate dig site to the lanes that still carry Viking names.",
+      "preview_clip_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/preview.mp3",
+      "ambient_soundscape_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/ambient.mp3",
+      "completion_summary": "You've walked the bones of a Viking city. Most of Jorvik is gone — burned, rebuilt, paved over — but the street plan is still theirs, and so are the names: Coppergate, Micklegate, Stonegate. The Coppergate dig pulled fifteen tonnes of timber, leather, and bone from the waterlogged ground beneath your feet, and reconstructed two centuries of daily life from it. Jorvik isn't a memory in York. It's the foundation.",
+      "hero_image_url": "https://images.unsplash.com/photo-1601820817473-3fc7ffd6dd25?w=1200&q=80",
+      "is_free": false,
+      "price_tier": "single",
+      "status": "published"
+    }
+  ],
+  "waypoints": [
+    {
+      "id": "tower-prisoners-01",
+      "tour_id": "tower-of-london-prisoners",
+      "order": 1,
+      "title": "Traitors' Gate",
+      "latitude": 51.5081,
+      "longitude": -0.0761,
+      "trigger_radius_m": 30.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/wp01-traitors-gate.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/transition-01-02.mp3"
+    },
+    {
+      "id": "tower-prisoners-02",
+      "tour_id": "tower-of-london-prisoners",
+      "order": 2,
+      "title": "The Beauchamp Tower",
+      "latitude": 51.5085,
+      "longitude": -0.0768,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/wp02-beauchamp-tower.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/transition-02-03.mp3"
+    },
+    {
+      "id": "tower-prisoners-03",
+      "tour_id": "tower-of-london-prisoners",
+      "order": 3,
+      "title": "Tower Green — The Scaffold Site",
+      "latitude": 51.5090,
+      "longitude": -0.0766,
+      "trigger_radius_m": 20.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/tower-of-london-prisoners/wp03-tower-green.mp3",
+      "transition_audio_url": null
+    },
+    {
+      "id": "blitz-thames-01",
+      "tour_id": "london-blitz-thames",
+      "order": 1,
+      "title": "St Paul's Watch",
+      "latitude": 51.5138,
+      "longitude": -0.0984,
+      "trigger_radius_m": 30.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/wp01-st-pauls.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/transition-01-02.mp3"
+    },
+    {
+      "id": "blitz-thames-02",
+      "tour_id": "london-blitz-thames",
+      "order": 2,
+      "title": "Millennium Bridge — The South Bank Crossing",
+      "latitude": 51.5095,
+      "longitude": -0.0986,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/wp02-millennium.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/transition-02-03.mp3"
+    },
+    {
+      "id": "blitz-thames-03",
+      "tour_id": "london-blitz-thames",
+      "order": 3,
+      "title": "Bankside — The Anchor Pub",
+      "latitude": 51.5079,
+      "longitude": -0.0935,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/wp03-bankside.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/transition-03-04.mp3"
+    },
+    {
+      "id": "blitz-thames-04",
+      "tour_id": "london-blitz-thames",
+      "order": 4,
+      "title": "Borough High Street Shelter",
+      "latitude": 51.5042,
+      "longitude": -0.0905,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/london-blitz-thames/wp04-borough.mp3",
+      "transition_audio_url": null
+    },
+    {
+      "id": "york-jorvik-01",
+      "tour_id": "york-jorvik-walk",
+      "order": 1,
+      "title": "Coppergate — Beneath the Dig",
+      "latitude": 53.9576,
+      "longitude": -1.0813,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/wp01-coppergate.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/transition-01-02.mp3"
+    },
+    {
+      "id": "york-jorvik-02",
+      "tour_id": "york-jorvik-walk",
+      "order": 2,
+      "title": "Micklegate Bar",
+      "latitude": 53.9568,
+      "longitude": -1.0879,
+      "trigger_radius_m": 25.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/wp02-micklegate.mp3",
+      "transition_audio_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/transition-02-03.mp3"
+    },
+    {
+      "id": "york-jorvik-03",
+      "tour_id": "york-jorvik-walk",
+      "order": 3,
+      "title": "Jorvik Viking Centre",
+      "latitude": 53.9580,
+      "longitude": -1.0805,
+      "trigger_radius_m": 20.0,
+      "audio_url": "https://cdn.wanderpast.app/tours/york-jorvik-walk/wp03-jorvik-centre.mp3",
+      "transition_audio_url": null
+    }
+  ]
+}

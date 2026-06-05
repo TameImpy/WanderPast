@@ -72,12 +72,63 @@
   - `CityBrowseView` SwiftUI screen — `EXPLORE / Cities` header, city cards with hero image + tour count overlay, loading and error states with Retry button
 
 ### Remaining (UI slices 8–10)
-- [ ] **Slice 8** — `TourListViewModel(cityID:)` (editorial pick first, flagged) and `ThemeBrowseViewModel` (groups by era). SwiftUI screens. Tap target wires from `CityBrowseView` city card.
-- [ ] **Slice 9** — `TourDetailViewModel(tourID:)`. Upgrade `TourDetailView` with narrator block, hero image, static MapKit overview map (computes region from waypoint coords), 60-second `PreviewClipButton` (calls `AudioEngine.playPreviewClip(url:)`).
-- [ ] **Slice 10** — Boot `WanderpastApp` into `CityBrowseView`. App-wide error/loading states. Manual verification: airplane mode → error state, online → cities → tours → detail with map + preview, Start Tour still works.
+
+#### Pre-slice TODO — publish `catalogue.json`
+Slice 10 assumes a hosted catalogue.json. Before Slice 10 (ideally during Slice 8 so Slice 9 can also point at it) we need to:
+- Create `Wanderpast/Resources/catalogue.json` by extending `sample_tour.json` to the `{ cities, tours, waypoints }` shape that `CatalogueParser` expects. London should remain present (so the existing Tower tour keeps working), but add at least one extra city + one extra tour so `CityBrowseView` and `TourListView` aren't trivially single-item.
+- Commit it to the repo so it's reachable at `https://raw.githubusercontent.com/TameImpy/WanderPast/main/Wanderpast/Resources/catalogue.json`.
+- Bundle it as well so the first launch has something to parse even before any network call (Slice 10 will decide whether to seed the cache from the bundle or just rely on the fetcher).
+
+#### Slice 8 — Tour list per city + theme browse
+Pure logic in `WanderpastCore` (TDD, follow the Slice 7 pattern):
+- `TourListState` enum: `.loading | .loaded(editorialPick: Tour?, others: [Tour]) | .error(retryable:)`. Editorial pick is exposed separately so the UI can render a hero card. `others` must exclude the pick to avoid double-rendering. Pure `from(loadResult:cityID:)` mapper.
+- `ThemeBrowseState` enum: `.loading | .loaded([EraGroup]) | .error(retryable:)`. Pure `from(loadResult:)` mapper that delegates to `Catalogue.toursGroupedByEra()` (already exists).
+- Tests cover: editorial pick is excluded from `others`; city with no pick puts everything in `others`; same error mapping rules as `CityBrowseState`.
+
+Main app (`Wanderpast/Browse/`):
+- `TourListViewModel(cityID:repository:)` — `@MainActor` ObservableObject, same `load()`/`retry()` pattern as `CityBrowseViewModel`.
+- `ThemeBrowseViewModel(repository:)` — same shape.
+- `TourListView(viewModel:)` SwiftUI screen — header with city name; if `editorialPick` non-nil, render a "Featured" hero card; below it a `LazyVStack` of regular tour cards. Loading and retryable error states.
+- `ThemeBrowseView(viewModel:)` SwiftUI screen — list of era sections (era label + start year overline, then tour cards).
+
+Navigation wiring:
+- Make `CityBrowseView`'s city card a `NavigationLink` (or set a `selectedCity` binding that drives `.navigationDestination`) pushing `TourListView(cityID:)`. Repository is passed through the environment or constructor.
+- Don't wire ThemeBrowse into the main flow yet — it's a sibling entry point we'll surface later. Just make sure it compiles and previews.
+
+Project plumbing:
+- Update `project.pbxproj` to register the new files (uses traditional file references; folders are not auto-synchronized — see how Slice 7 added `Browse/`).
+
+#### Slice 9 — Real `TourDetailView` driven by the catalogue
+Pure logic in `WanderpastCore`:
+- `TourDetailState` enum: `.loading | .loaded(Tour, [Waypoint]) | .error(retryable:) | .notFound`. Pure mapper takes `LoadResult + tourID` and returns `.notFound` when the catalogue parses but doesn't contain that ID.
+- Tests cover all five branches.
+
+Main app:
+- `TourDetailViewModel(tourID:repository:)` — `@MainActor` ObservableObject.
+- Upgrade existing `Wanderpast/TourDetailView.swift` to take a `TourDetailViewModel` instead of constructing `SampleData` directly. Keep the existing styling — most of it is reusable — but data-source it from the loaded `Tour` and `[Waypoint]`.
+- Add new UI elements:
+  - **Hero image** — replace the flat `Color.charcoal` band with `AsyncImage(url: tour.heroImageURL)` falling back to charcoal.
+  - **Static MapKit overview** — `Map(...)` with a `MKCoordinateRegion` computed from the bounding box of waypoint coords (add small padding). Read-only, no annotations beyond a marker per waypoint. Lives below the description.
+  - **PreviewClipButton** — new view in `Wanderpast/Browse/` or `Wanderpast/Tour/`. Tapping plays a 60-second clip via a new `AudioEngine.playPreviewClip(url:)` (separate AVPlayer instance so it doesn't tangle with `startTour`). Disabled when `tour.previewClipURL` is nil.
+- `SampleData` becomes dev-only; can be deleted in Slice 10 if not used.
+
+Project plumbing:
+- Add the new Swift files to `project.pbxproj`.
+- Add `MapKit.framework` (or use SwiftUI's `Map` which auto-links it — verify after first build).
+
+#### Slice 10 — Boot the app into browse + end-to-end QA
+- Construct a real `CatalogueRepository` at app start. Cache directory = `FileManager.default.urls(for: .documentDirectory, ...).first!.appendingPathComponent("catalogue")`. URL = the GitHub raw URL committed in the pre-slice TODO.
+- Replace `WanderpastApp`'s root view: `NavigationStack { CityBrowseView(viewModel: CityBrowseViewModel(repository: ...)) }`. The repository instance should be created once and passed into child VMs.
+- App-wide loading/error: the per-screen states already cover this; just make sure `TourCoordinator` (used by `InTourView`) still receives the right `Tour` and `[Waypoint]` when `Start Tour` is pressed — currently it reads from `SampleData`; rewire it to take the data from the `TourDetailViewModel`.
+- Manual QA checklist:
+  - Airplane mode, cold cache → error state with Retry, retry once back online recovers.
+  - Online → cities list renders, tap city → tour list with editorial pick first, tap tour → detail with hero, map, preview button.
+  - Preview button plays a 60-second clip and stops automatically.
+  - Start Tour still works end-to-end and audio plays via `InTourView`.
+  - Returning to the same city within 1 hour uses cache (no network spinner); after the cache TTL, fresh fetch happens.
 
 ### Decisions locked in
-- CDN URL for testing: GitHub raw URL (`raw.githubusercontent.com/...`), to be set up when we wire repo into app
+- CDN URL: `https://raw.githubusercontent.com/TameImpy/WanderPast/main/Wanderpast/Resources/catalogue.json` (created during Slice 8 pre-slice TODO)
 - Cache TTL: 1 hour
 - Era ordering: `eraStartYear: Int` field on Tour (added)
 

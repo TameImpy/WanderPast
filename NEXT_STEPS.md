@@ -109,11 +109,15 @@ Manual QA checklist (then Issue #6 closes):
 ## Remaining GitHub issues (in priority order)
 
 ### Suggested next pickup
-**Issue #11** (In-tour UX) is the recommended next ticket — it polishes the flow that already exists (`InTourView`), is fully testable in the simulator, and unblocks user-facing improvements. Issue #7 (proximity) needs real-device GPS testing and is harder to QA without one.
+**Issue #7** (Proximity-based discovery) is the recommended next ticket. Discovery is upstream of in-tour polish — without it, the only way to find a tour is to already know the city, which is fine for a two-city demo but not for an MVP whose core promise is location-based audio tours. Context is also hot: Issue #6 just established the catalogue + browse pattern, and Issue #4 (LiveGeofenceManager) already touched CoreLocation.
+
+The simulator-GPS objection is real but not blocking — the proximity ranker (given a location + catalogue, return tours within X km sorted by distance) is a pure function that lives in `WanderpastCore` with stubbed `CLLocation` inputs and gets fully unit-tested. Only the live `CLLocationManager` plumbing needs a real device, and Xcode's *Simulate Location* feature is good enough for most of that too.
+
+Issue #11 (In-tour UX) is a strong follow-up immediately after — it polishes `InTourView` (controls, Help I'm lost, completion card) and is trivially simulator-testable, but it's polish on a flow users reach *after* discovery, so it's lower-leverage until #7 lands.
 
 ### Core experience (do these next)
-- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card *(recommended next)*
-- **Issue #7** — Proximity-based discovery: nearby tours *(real-device dependency)*
+- **Issue #7** — Proximity-based discovery: nearby tours *(recommended next)*
+- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card *(strong follow-up after #7)*
 
 ### Auth & commerce
 - **Issue #8** — Sign in with Apple + user state persistence

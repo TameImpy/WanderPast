@@ -10,18 +10,18 @@
 - `CLAUDE.md` — project instructions for future sessions
 - PRD submitted as GitHub issue #1 (https://github.com/TameImpy/WanderPast/issues/1)
 - 15 implementation issues created (#2-#16) as vertical slices
-- **Issue #2** (Xcode project skeleton) — done
-- **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
-- **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
-- **Issue #5** (Tracer Bullet) — partially done (see below)
-- **Issue #6** (Tour catalogue) — **complete pending end-to-end QA**. All eleven slices in: backend 0–6 (parser, queries, cache policy, fetcher, cache, repository), Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView), Slice 9 (catalogue-driven TourDetailView with hero, MapKit, preview clip), and Slice 10 (CityBrowseView as the app root, end-to-end navigation, `TourCoordinator.startTour(tour:waypoints:)` driven by the loaded data instead of `SampleData`). 83 tests in 13 suites.
+- **Issue #2** (Xcode project skeleton) — done, closed on GitHub.
+- **Issue #3** (AudioEngine) — done, closed on GitHub. `AudioEngineState` pure state machine with 10 tests.
+- **Issue #4** (GeofenceManager) — done, closed on GitHub. `GeofenceState` pure state machine with 8 tests.
+- **Issue #5** (Tracer Bullet) — done end-to-end, closed on GitHub with deferred items noted in the close comment. Tower of London tour plays through `InTourView` in the simulator. Known follow-ups still tracked in this file's "Issue #5 — remaining" section below.
+- **Issue #6** (Tour catalogue) — done, closed on GitHub. Eleven slices: backend 0–6 (parser, queries, cache policy, fetcher, cache, repository), Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView), Slice 9 (catalogue-driven TourDetailView with hero, MapKit, preview clip), and Slice 10 (CityBrowseView as the app root, end-to-end navigation, `TourCoordinator.startTour(tour:waypoints:)` driven by the loaded data instead of `SampleData`). 83 tests in 13 suites. Hero-image horizontal-overflow bug fixed in `67b7950` (use `GeometryReader` to hard-cap width — `.frame(maxWidth: .infinity)` alone is a request, not a cap, and the layout broke for any Unsplash crop whose intrinsic width exceeded the viewport).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
 
 ---
 
-## Issue #5 — what's done vs what's remaining
+## Issue #5 — remaining follow-ups (closed on GitHub, tracked here for the next session)
 
 ### Done
 - `TourService` state machine (7 tests, orchestrates AudioEngine + GeofenceManager)
@@ -108,9 +108,12 @@ Manual QA checklist (then Issue #6 closes):
 
 ## Remaining GitHub issues (in priority order)
 
+### Suggested next pickup
+**Issue #11** (In-tour UX) is the recommended next ticket — it polishes the flow that already exists (`InTourView`), is fully testable in the simulator, and unblocks user-facing improvements. Issue #7 (proximity) needs real-device GPS testing and is harder to QA without one.
+
 ### Core experience (do these next)
-- **Issue #7** — Proximity-based discovery: nearby tours
-- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card
+- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card *(recommended next)*
+- **Issue #7** — Proximity-based discovery: nearby tours *(real-device dependency)*
 
 ### Auth & commerce
 - **Issue #8** — Sign in with Apple + user state persistence

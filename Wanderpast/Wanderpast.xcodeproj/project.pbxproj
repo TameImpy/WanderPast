@@ -26,6 +26,8 @@
 		A10027 /* ThemeBrowseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10027 /* ThemeBrowseViewModel.swift */; };
 		A10028 /* TourListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10028 /* TourListView.swift */; };
 		A10029 /* ThemeBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10029 /* ThemeBrowseView.swift */; };
+		A10036 /* TourDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10036 /* TourDetailViewModel.swift */; };
+		A10037 /* PreviewClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10037 /* PreviewClipButton.swift */; };
 		A10030 /* ambient.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10030 /* ambient.m4a */; };
 		A10031 /* wp01-traitors-gate.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10031 /* wp01-traitors-gate.m4a */; };
 		A10032 /* wp02-beauchamp-tower.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10032 /* wp02-beauchamp-tower.m4a */; };
@@ -62,6 +64,8 @@
 		B10027 /* ThemeBrowseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBrowseViewModel.swift; sourceTree = "<group>"; };
 		B10028 /* TourListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourListView.swift; sourceTree = "<group>"; };
 		B10029 /* ThemeBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBrowseView.swift; sourceTree = "<group>"; };
+		B10036 /* TourDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailViewModel.swift; sourceTree = "<group>"; };
+		B10037 /* PreviewClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewClipButton.swift; sourceTree = "<group>"; };
 		B10030 /* ambient.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ambient.m4a; sourceTree = "<group>"; };
 		B10031 /* wp01-traitors-gate.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp01-traitors-gate.m4a"; sourceTree = "<group>"; };
 		B10032 /* wp02-beauchamp-tower.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp02-beauchamp-tower.m4a"; sourceTree = "<group>"; };
@@ -192,6 +196,8 @@
 				B10028 /* TourListView.swift */,
 				B10027 /* ThemeBrowseViewModel.swift */,
 				B10029 /* ThemeBrowseView.swift */,
+				B10036 /* TourDetailViewModel.swift */,
+				B10037 /* PreviewClipButton.swift */,
 			);
 			path = Browse;
 			sourceTree = "<group>";
@@ -329,6 +335,8 @@
 				A10027 /* ThemeBrowseViewModel.swift in Sources */,
 				A10028 /* TourListView.swift in Sources */,
 				A10029 /* ThemeBrowseView.swift in Sources */,
+				A10036 /* TourDetailViewModel.swift in Sources */,
+				A10037 /* PreviewClipButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

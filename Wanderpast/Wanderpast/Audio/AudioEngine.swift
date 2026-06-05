@@ -12,6 +12,16 @@ final class AudioEngine: NSObject, ObservableObject {
     private var waypointPlayer: AVAudioPlayer?
     private var transitionPlayer: AVAudioPlayer?
 
+    /// Separate AVPlayer for streaming the 60-second preview clip from the catalogue's CDN URL.
+    /// Kept fully isolated from the tour audio path so the two flows never tangle.
+    private var previewPlayer: AVPlayer?
+    private var previewTimeObserver: Any?
+    @Published private(set) var isPreviewPlaying: Bool = false
+
+    /// Hard ceiling on preview playback. Catalogue clips are produced at 60s; this is a safety net
+    /// if the upstream file ever exceeds that.
+    private let previewMaxDuration: TimeInterval = 60
+
     private var fadeDuration: TimeInterval = 0.5
     private var tourTitle: String = ""
     private var waypointTitles: [String: String] = [:]
@@ -103,6 +113,51 @@ final class AudioEngine: NSObject, ObservableObject {
         state.skipBackward()
         waypointPlayer?.stop()
         updateNowPlaying()
+    }
+
+    // MARK: - Preview clip
+
+    /// Streams a 60-second preview clip from a remote URL using a dedicated AVPlayer.
+    /// Does not touch the tour audio players. Auto-stops at `previewMaxDuration`.
+    func playPreviewClip(url: URL) {
+        stopPreviewClip()
+
+        let item = AVPlayerItem(url: url)
+        let player = AVPlayer(playerItem: item)
+        previewPlayer = player
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePreviewDidFinish),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: item
+        )
+
+        let stopTime = CMTime(seconds: previewMaxDuration, preferredTimescale: 600)
+        previewTimeObserver = player.addBoundaryTimeObserver(
+            forTimes: [NSValue(time: stopTime)],
+            queue: .main
+        ) { [weak self] in
+            self?.stopPreviewClip()
+        }
+
+        player.play()
+        isPreviewPlaying = true
+    }
+
+    func stopPreviewClip() {
+        if let observer = previewTimeObserver {
+            previewPlayer?.removeTimeObserver(observer)
+            previewTimeObserver = nil
+        }
+        previewPlayer?.pause()
+        previewPlayer = nil
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        if isPreviewPlaying { isPreviewPlaying = false }
+    }
+
+    @objc private func handlePreviewDidFinish() {
+        stopPreviewClip()
     }
 
     // MARK: - Private helpers

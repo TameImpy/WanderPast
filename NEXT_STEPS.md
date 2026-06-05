@@ -14,7 +14,7 @@
 - **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
 - **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
 - **Issue #5** (Tracer Bullet) — partially done (see below)
-- **Issue #6** (Tour catalogue) — backend slices 0–6 done, Slice 7 (CityBrowseViewModel + CityBrowseView) done, and Slice 8 (TourListState/View + ThemeBrowseState/View + CityBrowse→TourList NavigationLink) done. Production `Wanderpast/Resources/catalogue.json` published at the GitHub raw URL with London (2 tours) + York (1 tour) + 10 waypoints. 77 tests in 12 suites. UI slices 9–10 remaining (see below).
+- **Issue #6** (Tour catalogue) — backend slices 0–6 done, Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView + CityBrowse→TourList nav), and Slice 9 (catalogue-driven TourDetailView with hero image, MapKit route overview, preview clip button) all done. Production `Wanderpast/Resources/catalogue.json` is live at the GitHub raw URL. WanderpastApp now constructs a real `CatalogueRepository` at launch and boots into `TourDetailView` for the Tower of London tour. 83 tests in 13 suites. Slice 10 remaining (wire CityBrowseView as the root + end-to-end QA).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -57,7 +57,7 @@
 
 ## Issue #6 — what's done vs what's remaining
 
-### Done (backend slices 0–6 + UI slices 7–8, all tests passing)
+### Done (backend slices 0–6 + UI slices 7–9, all tests passing)
 - Codable models relocated to `WanderpastCore` and made public (`Tour`, `City`, `Waypoint`, `Catalogue`). `eraStartYear: Int` added to `Tour` for chronological sorting. `sample_tour.json` updated.
 - `CatalogueParser` — `parse(data:) throws -> Catalogue` with typed errors `.empty`, `.malformed`, `.invalid(field:)`
 - Query API on `Catalogue` — `publishedCities()`, `cityRows()` (rows with derived published-tour count), `tours(in:)` with editorial pick first, `toursGroupedByEra()` sorted by `eraStartYear`, `tour(id:)`, `waypoints(for:)`, `editorialPick(for:)`
@@ -79,26 +79,16 @@
   - `TourListView(viewModel:cityName:)` SwiftUI screen — `TOURS IN / <City>` header, FEATURED hero card for the editorial pick (full-bleed image + era + title overlay + description + metadata), MORE TOURS list of compact cards with thumbnail.
   - `ThemeBrowseView(viewModel:)` SwiftUI screen — `BROWSE BY / Era` header, era sections with start year overline + tour cards. Not wired into the main flow yet — sibling entry point for later.
   - `CityBrowseView` city card wrapped in `NavigationLink` to `TourListView(cityID:)`; `CityBrowseView` now also takes a `repository:` parameter so it can construct child VMs.
+- **Slice 9 — Catalogue-driven TourDetailView**
+  - `TourDetailState` pure enum + `TourDetailState.from(loadResult:tourID:)` mapper in Core (6 tests): `.loaded(Tour, [Waypoint])` for fresh/cached when present; `.notFound` (distinct from `.error`) when catalogue parses but doesn't contain the tour; standard retryable/non-retryable error mapping for the failure cases.
+  - `TourDetailViewModel(tourID:repository:)` ObservableObject (main app) — same `@MainActor` load/retry pattern as the other VMs.
+  - `TourDetailView` rewritten to take a `TourDetailViewModel + TourCoordinator`. Switches on `state`: loading / loaded / error(retryable:) / notFound. Loaded UI keeps the existing styling but data-sources from the published `Tour` and `[Waypoint]`, and adds three new things:
+    - **Hero image** — `AsyncImage(url: tour.heroImageURL)` over the title banner, falling back to charcoal.
+    - **MapKit route overview** — `Map(initialPosition:)` zoomed to the bounding box of waypoint coordinates (with padding so markers aren't flush against the edge), tinted markers, no interaction.
+    - **PreviewClipButton** — pill that toggles between PLAY 60-SEC PREVIEW and STOP PREVIEW. Disabled when the catalogue entry has no `preview_clip_url`. Backed by a new `AudioEngine.playPreviewClip(url:)` using a separate AVPlayer that streams from the CDN and auto-stops at 60s, fully isolated from the tour audio path.
+  - `WanderpastApp` constructs a real `CatalogueRepository` at launch (FileManager-backed `CatalogueCache`, default `CatalogueFetcher`, GitHub raw URL) and boots into `TourDetailView` for `tower-of-london-prisoners`. `TourCoordinator.startTour()` is unchanged — Slice 10 will rewire it to take Tour + Waypoint data from the view model.
 
-### Remaining (UI slices 9–10)
-
-#### Slice 9 — Real `TourDetailView` driven by the catalogue
-Pure logic in `WanderpastCore`:
-- `TourDetailState` enum: `.loading | .loaded(Tour, [Waypoint]) | .error(retryable:) | .notFound`. Pure mapper takes `LoadResult + tourID` and returns `.notFound` when the catalogue parses but doesn't contain that ID.
-- Tests cover all five branches.
-
-Main app:
-- `TourDetailViewModel(tourID:repository:)` — `@MainActor` ObservableObject.
-- Upgrade existing `Wanderpast/TourDetailView.swift` to take a `TourDetailViewModel` instead of constructing `SampleData` directly. Keep the existing styling — most of it is reusable — but data-source it from the loaded `Tour` and `[Waypoint]`.
-- Add new UI elements:
-  - **Hero image** — replace the flat `Color.charcoal` band with `AsyncImage(url: tour.heroImageURL)` falling back to charcoal.
-  - **Static MapKit overview** — `Map(...)` with a `MKCoordinateRegion` computed from the bounding box of waypoint coords (add small padding). Read-only, no annotations beyond a marker per waypoint. Lives below the description.
-  - **PreviewClipButton** — new view in `Wanderpast/Browse/` or `Wanderpast/Tour/`. Tapping plays a 60-second clip via a new `AudioEngine.playPreviewClip(url:)` (separate AVPlayer instance so it doesn't tangle with `startTour`). Disabled when `tour.previewClipURL` is nil.
-- `SampleData` becomes dev-only; can be deleted in Slice 10 if not used.
-
-Project plumbing:
-- Add the new Swift files to `project.pbxproj`.
-- Add `MapKit.framework` (or use SwiftUI's `Map` which auto-links it — verify after first build).
+### Remaining (UI slice 10)
 
 #### Slice 10 — Boot the app into browse + end-to-end QA
 - Construct a real `CatalogueRepository` at app start. Cache directory = `FileManager.default.urls(for: .documentDirectory, ...).first!.appendingPathComponent("catalogue")`. URL = the GitHub raw URL committed in the pre-slice TODO.
@@ -169,8 +159,9 @@ Wanderpast/
 │   │   ├── CatalogueRepository.swift     # Composes fetch + cache + parse + policy (6 tests)
 │   │   ├── CityBrowseState.swift         # Pure mapper LoadResult → browse state (5 tests)
 │   │   ├── TourListState.swift           # Pure mapper LoadResult + cityID → tour-list state (7 tests)
-│   │   └── ThemeBrowseState.swift        # Pure mapper LoadResult → theme-browse state (5 tests)
-│   └── Tests/WanderpastCoreTests/        # 77 tests total in 12 suites
+│   │   ├── ThemeBrowseState.swift        # Pure mapper LoadResult → theme-browse state (5 tests)
+│   │   └── TourDetailState.swift         # Pure mapper LoadResult + tourID → detail state (6 tests)
+│   └── Tests/WanderpastCoreTests/        # 83 tests total in 13 suites
 ├── Resources/                            # Repo-level resources (served via GitHub raw URL)
 │   └── catalogue.json                    # Production catalogue: London + York, 3 tours, 10 waypoints
 ├── Wanderpast/                           # Main iOS app
@@ -185,7 +176,9 @@ Wanderpast/
 │   │   ├── TourListViewModel.swift       # ObservableObject — per-city tour list
 │   │   ├── TourListView.swift            # SwiftUI screen — featured hero + more tours
 │   │   ├── ThemeBrowseViewModel.swift    # ObservableObject — era-grouped browse
-│   │   └── ThemeBrowseView.swift         # SwiftUI screen — era sections (sibling entry, not wired yet)
+│   │   ├── ThemeBrowseView.swift         # SwiftUI screen — era sections (sibling entry, not wired yet)
+│   │   ├── TourDetailViewModel.swift     # ObservableObject — single-tour detail
+│   │   └── PreviewClipButton.swift       # SwiftUI pill that streams a 60-sec preview via AudioEngine
 │   ├── Models/SampleData.swift           # Bundle.main loader for sample_tour.json
 │   ├── DesignSystem/                     # Color, Typography, Spacing tokens
 │   ├── Resources/

@@ -10,7 +10,6 @@
 		A10001 /* WanderpastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001 /* WanderpastApp.swift */; };
 		A10002 /* TourDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002 /* TourDetailView.swift */; };
 		A10003 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003 /* LaunchScreen.swift */; };
-		A10007 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007 /* SampleData.swift */; };
 		A10008 /* Color+Wanderpast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008 /* Color+Wanderpast.swift */; };
 		A10009 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* Typography.swift */; };
 		A10010 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10010 /* Spacing.swift */; };
@@ -47,7 +46,6 @@
 		B10001 /* WanderpastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WanderpastApp.swift; sourceTree = "<group>"; };
 		B10002 /* TourDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailView.swift; sourceTree = "<group>"; };
 		B10003 /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
-		B10007 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		B10008 /* Color+Wanderpast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Wanderpast.swift"; sourceTree = "<group>"; };
 		B10009 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		B10010 /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
@@ -108,7 +106,6 @@
 				B10001 /* WanderpastApp.swift */,
 				B10002 /* TourDetailView.swift */,
 				B10003 /* LaunchScreen.swift */,
-				D10003 /* Models */,
 				D10004 /* DesignSystem */,
 				D10006 /* Audio */,
 				D10007 /* Location */,
@@ -119,14 +116,6 @@
 				B10013 /* Info.plist */,
 			);
 			path = Wanderpast;
-			sourceTree = "<group>";
-		};
-		D10003 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				B10007 /* SampleData.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		D10004 /* DesignSystem */ = {
@@ -321,7 +310,6 @@
 				A10001 /* WanderpastApp.swift in Sources */,
 				A10002 /* TourDetailView.swift in Sources */,
 				A10003 /* LaunchScreen.swift in Sources */,
-				A10007 /* SampleData.swift in Sources */,
 				A10008 /* Color+Wanderpast.swift in Sources */,
 				A10009 /* Typography.swift in Sources */,
 				A10010 /* Spacing.swift in Sources */,

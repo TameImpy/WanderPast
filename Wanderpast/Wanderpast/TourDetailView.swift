@@ -7,7 +7,7 @@ import WanderpastCore
 /// responsible for the in-tour audio session when Start Tour is pressed.
 struct TourDetailView: View {
     @ObservedObject var viewModel: TourDetailViewModel
-    @ObservedObject var coordinator: TourCoordinator
+    @EnvironmentObject var coordinator: TourCoordinator
     @State private var showingTour = false
 
     var body: some View {
@@ -31,7 +31,7 @@ struct TourDetailView: View {
             }
         }
         .navigationDestination(isPresented: $showingTour) {
-            InTourView(coordinator: coordinator)
+            InTourView()
                 .navigationBarBackButtonHidden(true)
         }
     }
@@ -124,7 +124,7 @@ struct TourDetailView: View {
             PreviewClipButton(url: tour.previewClipURL, audioEngine: coordinator.audioEngine)
 
             Button(action: {
-                coordinator.startTour()
+                coordinator.startTour(tour: tour, waypoints: waypoints)
                 showingTour = true
             }) {
                 Text("START TOUR")

@@ -14,7 +14,7 @@
 - **Issue #3** (AudioEngine) — done. `AudioEngineState` pure state machine with 10 tests
 - **Issue #4** (GeofenceManager) — done. `GeofenceState` pure state machine with 8 tests
 - **Issue #5** (Tracer Bullet) — partially done (see below)
-- **Issue #6** (Tour catalogue) — backend slices 0–6 done, Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView + CityBrowse→TourList nav), and Slice 9 (catalogue-driven TourDetailView with hero image, MapKit route overview, preview clip button) all done. Production `Wanderpast/Resources/catalogue.json` is live at the GitHub raw URL. WanderpastApp now constructs a real `CatalogueRepository` at launch and boots into `TourDetailView` for the Tower of London tour. 83 tests in 13 suites. Slice 10 remaining (wire CityBrowseView as the root + end-to-end QA).
+- **Issue #6** (Tour catalogue) — **complete pending end-to-end QA**. All eleven slices in: backend 0–6 (parser, queries, cache policy, fetcher, cache, repository), Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView), Slice 9 (catalogue-driven TourDetailView with hero, MapKit, preview clip), and Slice 10 (CityBrowseView as the app root, end-to-end navigation, `TourCoordinator.startTour(tour:waypoints:)` driven by the loaded data instead of `SampleData`). 83 tests in 13 suites.
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -57,7 +57,7 @@
 
 ## Issue #6 — what's done vs what's remaining
 
-### Done (backend slices 0–6 + UI slices 7–9, all tests passing)
+### Done (backend slices 0–6 + UI slices 7–10, all tests passing)
 - Codable models relocated to `WanderpastCore` and made public (`Tour`, `City`, `Waypoint`, `Catalogue`). `eraStartYear: Int` added to `Tour` for chronological sorting. `sample_tour.json` updated.
 - `CatalogueParser` — `parse(data:) throws -> Catalogue` with typed errors `.empty`, `.malformed`, `.invalid(field:)`
 - Query API on `Catalogue` — `publishedCities()`, `cityRows()` (rows with derived published-tour count), `tours(in:)` with editorial pick first, `toursGroupedByEra()` sorted by `eraStartYear`, `tour(id:)`, `waypoints(for:)`, `editorialPick(for:)`
@@ -87,19 +87,19 @@
     - **MapKit route overview** — `Map(initialPosition:)` zoomed to the bounding box of waypoint coordinates (with padding so markers aren't flush against the edge), tinted markers, no interaction.
     - **PreviewClipButton** — pill that toggles between PLAY 60-SEC PREVIEW and STOP PREVIEW. Disabled when the catalogue entry has no `preview_clip_url`. Backed by a new `AudioEngine.playPreviewClip(url:)` using a separate AVPlayer that streams from the CDN and auto-stops at 60s, fully isolated from the tour audio path.
   - `WanderpastApp` constructs a real `CatalogueRepository` at launch (FileManager-backed `CatalogueCache`, default `CatalogueFetcher`, GitHub raw URL) and boots into `TourDetailView` for `tower-of-london-prisoners`. `TourCoordinator.startTour()` is unchanged — Slice 10 will rewire it to take Tour + Waypoint data from the view model.
+- **Slice 10 — End-to-end browse → detail → tour**
+  - `WanderpastApp` root is now `NavigationStack { CityBrowseView(viewModel: ..., repository: ...) }`. The `CatalogueRepository` is created once in `init` and passed into child VMs; the shared `TourCoordinator` is injected via `.environmentObject(...)` and read by `TourDetailView` and `InTourView` via `@EnvironmentObject` (their explicit `coordinator:` arguments are gone).
+  - `TourListView` got a `repository:` parameter and wraps the FEATURED hero card + MORE TOURS cards in `NavigationLink`s pushing `TourDetailView` with a fresh `TourDetailViewModel(tourID:repository:)`. `CityBrowseView` now passes the repository through to `TourListView`.
+  - `TourCoordinator.startTour()` is now `startTour(tour: Tour, waypoints: [Waypoint])`. `TourDetailView`'s Start Tour button hands the loaded `Tour` + `[Waypoint]` from `TourDetailViewModel.state` directly to the coordinator — no more `SampleData.load()` round-trip. `SampleData.swift` deleted (dead code); `sample_tour.json` stays bundled in case we want a no-network fallback later.
 
-### Remaining (UI slice 10)
+### Remaining — end-to-end QA only
 
-#### Slice 10 — Boot the app into browse + end-to-end QA
-- Construct a real `CatalogueRepository` at app start. Cache directory = `FileManager.default.urls(for: .documentDirectory, ...).first!.appendingPathComponent("catalogue")`. URL = the GitHub raw URL committed in the pre-slice TODO.
-- Replace `WanderpastApp`'s root view: `NavigationStack { CityBrowseView(viewModel: CityBrowseViewModel(repository: ...)) }`. The repository instance should be created once and passed into child VMs.
-- App-wide loading/error: the per-screen states already cover this; just make sure `TourCoordinator` (used by `InTourView`) still receives the right `Tour` and `[Waypoint]` when `Start Tour` is pressed — currently it reads from `SampleData`; rewire it to take the data from the `TourDetailViewModel`.
-- Manual QA checklist:
-  - Airplane mode, cold cache → error state with Retry, retry once back online recovers.
-  - Online → cities list renders, tap city → tour list with editorial pick first, tap tour → detail with hero, map, preview button.
-  - Preview button plays a 60-second clip and stops automatically.
-  - Start Tour still works end-to-end and audio plays via `InTourView`.
-  - Returning to the same city within 1 hour uses cache (no network spinner); after the cache TTL, fresh fetch happens.
+Manual QA checklist (then Issue #6 closes):
+- Airplane mode, cold cache → error state with Retry; retry once back online recovers.
+- Online → cities list renders (London, York), tap city → tour list with editorial pick first, tap tour → detail with hero, map, preview button.
+- Preview button plays a 60-second clip and stops automatically. *(Catalogue preview URLs are placeholders — clip won't actually stream until real CDN content lands. Button toggling works; audio will be silent.)*
+- Start Tour still works end-to-end for the Tower of London tour (uses bundled audio) and `InTourView` plays. Blitz/York will navigate fine but have no bundled audio yet — that's expected and tracked in Issues #15/#16.
+- Returning to the same city within 1 hour uses cache (no network spinner); after the cache TTL, fresh fetch happens.
 
 ### Decisions locked in
 - CDN URL: `https://raw.githubusercontent.com/TameImpy/WanderPast/main/Wanderpast/Resources/catalogue.json` (created during Slice 8 pre-slice TODO)
@@ -179,7 +179,6 @@ Wanderpast/
 │   │   ├── ThemeBrowseView.swift         # SwiftUI screen — era sections (sibling entry, not wired yet)
 │   │   ├── TourDetailViewModel.swift     # ObservableObject — single-tour detail
 │   │   └── PreviewClipButton.swift       # SwiftUI pill that streams a 60-sec preview via AudioEngine
-│   ├── Models/SampleData.swift           # Bundle.main loader for sample_tour.json
 │   ├── DesignSystem/                     # Color, Typography, Spacing tokens
 │   ├── Resources/
 │   │   ├── Audio/                        # Bundled .m4a audio files

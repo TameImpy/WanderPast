@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Minimal in-tour UI: current waypoint, progress, play/pause, skip controls.
 struct InTourView: View {
-    @ObservedObject var coordinator: TourCoordinator
+    @EnvironmentObject var coordinator: TourCoordinator
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {

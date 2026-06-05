@@ -67,7 +67,8 @@ struct CityBrowseView: View {
                 NavigationLink {
                     TourListView(
                         viewModel: TourListViewModel(cityID: row.id, repository: repository),
-                        cityName: row.name
+                        cityName: row.name,
+                        repository: repository
                     )
                 } label: {
                     cityCard(row)

@@ -3,26 +3,23 @@ import WanderpastCore
 
 @main
 struct WanderpastApp: App {
-    @StateObject private var coordinator: TourCoordinator
-    @StateObject private var tourDetailVM: TourDetailViewModel
+    @StateObject private var coordinator = TourCoordinator()
+    @StateObject private var cityBrowseVM: CityBrowseViewModel
 
-    /// The Tower of London tour is hardcoded as the launch destination during Slice 9.
-    /// Slice 10 replaces this with `CityBrowseView` and full navigation.
-    private static let launchTourID = "tower-of-london-prisoners"
+    private let repository: CatalogueRepository
 
     init() {
-        let repository = Self.makeRepository()
-        _coordinator = StateObject(wrappedValue: TourCoordinator())
-        _tourDetailVM = StateObject(
-            wrappedValue: TourDetailViewModel(tourID: Self.launchTourID, repository: repository)
-        )
+        let repo = Self.makeRepository()
+        self.repository = repo
+        _cityBrowseVM = StateObject(wrappedValue: CityBrowseViewModel(repository: repo))
     }
 
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                TourDetailView(viewModel: tourDetailVM, coordinator: coordinator)
+                CityBrowseView(viewModel: cityBrowseVM, repository: repository)
             }
+            .environmentObject(coordinator)
         }
     }
 

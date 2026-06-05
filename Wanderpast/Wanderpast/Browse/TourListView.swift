@@ -5,6 +5,7 @@ import WanderpastCore
 struct TourListView: View {
     @ObservedObject var viewModel: TourListViewModel
     let cityName: String
+    let repository: CatalogueRepository
 
     var body: some View {
         ScrollView {
@@ -72,7 +73,9 @@ struct TourListView: View {
                         .font(.overline)
                         .tracking(2)
                         .foregroundStyle(Color.terracotta)
-                    heroCard(pick)
+                    tourLink(for: pick) {
+                        heroCard(pick)
+                    }
                 }
             }
             if !others.isEmpty {
@@ -85,7 +88,9 @@ struct TourListView: View {
                             .padding(.top, WPSpacing.xs)
                     }
                     ForEach(others) { tour in
-                        tourCard(tour)
+                        tourLink(for: tour) {
+                            tourCard(tour)
+                        }
                     }
                 }
             }
@@ -93,6 +98,17 @@ struct TourListView: View {
                 emptyView
             }
         }
+    }
+
+    private func tourLink<Label: View>(for tour: Tour, @ViewBuilder label: () -> Label) -> some View {
+        NavigationLink {
+            TourDetailView(
+                viewModel: TourDetailViewModel(tourID: tour.id, repository: repository)
+            )
+        } label: {
+            label()
+        }
+        .buttonStyle(.plain)
     }
 
     private func heroCard(_ tour: Tour) -> some View {

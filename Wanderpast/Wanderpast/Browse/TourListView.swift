@@ -113,45 +113,46 @@ struct TourListView: View {
 
     private func heroCard(_ tour: Tour) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .bottomLeading) {
-                Group {
-                    if let url = tour.heroImageURL {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image.resizable().scaledToFill()
-                            default:
-                                Color.charcoal
+            GeometryReader { geo in
+                ZStack(alignment: .bottomLeading) {
+                    Group {
+                        if let url = tour.heroImageURL {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image.resizable().scaledToFill()
+                                default:
+                                    Color.charcoal
+                                }
                             }
+                        } else {
+                            Color.charcoal
                         }
-                    } else {
-                        Color.charcoal
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 220)
-                .clipped()
+                    .frame(width: geo.size.width, height: 220)
+                    .clipped()
 
-                LinearGradient(
-                    colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.75)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(maxWidth: .infinity)
-                .frame(height: 220)
+                    LinearGradient(
+                        colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.75)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(width: geo.size.width, height: 220)
 
-                VStack(alignment: .leading, spacing: WPSpacing.xxs) {
-                    Text(tour.era.uppercased())
-                        .font(.overline)
-                        .tracking(1.5)
-                        .foregroundStyle(Color.sandstone)
-                    Text(tour.title)
-                        .font(.displayMedium)
-                        .foregroundStyle(Color.warmPaper)
+                    VStack(alignment: .leading, spacing: WPSpacing.xxs) {
+                        Text(tour.era.uppercased())
+                            .font(.overline)
+                            .tracking(1.5)
+                            .foregroundStyle(Color.sandstone)
+                        Text(tour.title)
+                            .font(.displayMedium)
+                            .foregroundStyle(Color.warmPaper)
+                    }
+                    .padding(WPSpacing.sm)
+                    .frame(width: geo.size.width, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(WPSpacing.sm)
             }
+            .frame(height: 220)
 
             VStack(alignment: .leading, spacing: WPSpacing.xxs) {
                 Text(tour.description)

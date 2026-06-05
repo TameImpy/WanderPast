@@ -48,47 +48,47 @@ struct TourDetailView: View {
     }
 
     private func heroBanner(_ tour: Tour) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            Group {
-                if let url = tour.heroImageURL {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        default:
-                            Color.charcoal
+        GeometryReader { geo in
+            ZStack(alignment: .bottomLeading) {
+                Group {
+                    if let url = tour.heroImageURL {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            default:
+                                Color.charcoal
+                            }
                         }
+                    } else {
+                        Color.charcoal
                     }
-                } else {
-                    Color.charcoal
                 }
+                .frame(width: geo.size.width, height: 320)
+                .clipped()
+
+                LinearGradient(
+                    colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.85)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(width: geo.size.width, height: 320)
+
+                VStack(alignment: .leading, spacing: WPSpacing.xxs) {
+                    Text(tour.era.uppercased())
+                        .font(.overline)
+                        .tracking(1.5)
+                        .foregroundStyle(Color.sandstone)
+
+                    Text(tour.title)
+                        .font(.displayLarge)
+                        .foregroundStyle(Color.warmPaper)
+                }
+                .padding(WPSpacing.md)
+                .frame(width: geo.size.width, alignment: .leading)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 320)
-            .clipped()
-
-            LinearGradient(
-                colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.85)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .frame(maxWidth: .infinity)
-            .frame(height: 320)
-
-            VStack(alignment: .leading, spacing: WPSpacing.xxs) {
-                Text(tour.era.uppercased())
-                    .font(.overline)
-                    .tracking(1.5)
-                    .foregroundStyle(Color.sandstone)
-
-                Text(tour.title)
-                    .font(.displayLarge)
-                    .foregroundStyle(Color.warmPaper)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(WPSpacing.md)
         }
-        .frame(maxWidth: .infinity)
+        .frame(height: 320)
     }
 
     private func metadataStrip(_ tour: Tour) -> some View {

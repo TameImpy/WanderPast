@@ -80,45 +80,46 @@ struct CityBrowseView: View {
 
     private func cityCard(_ row: CityRow) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .bottomLeading) {
-                Group {
-                    if let url = row.heroImageURL {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image.resizable().scaledToFill()
-                            default:
-                                Color.charcoal
+            GeometryReader { geo in
+                ZStack(alignment: .bottomLeading) {
+                    Group {
+                        if let url = row.heroImageURL {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image.resizable().scaledToFill()
+                                default:
+                                    Color.charcoal
+                                }
                             }
+                        } else {
+                            Color.charcoal
                         }
-                    } else {
-                        Color.charcoal
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 180)
-                .clipped()
+                    .frame(width: geo.size.width, height: 180)
+                    .clipped()
 
-                LinearGradient(
-                    colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.7)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(maxWidth: .infinity)
-                .frame(height: 180)
+                    LinearGradient(
+                        colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.7)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(width: geo.size.width, height: 180)
 
-                VStack(alignment: .leading, spacing: WPSpacing.xxxs) {
-                    Text(row.name)
-                        .font(.displayMedium)
-                        .foregroundStyle(Color.warmPaper)
-                    Text(tourCountLabel(row.publishedTourCount))
-                        .font(.overline)
-                        .tracking(1.5)
-                        .foregroundStyle(Color.sandstone)
+                    VStack(alignment: .leading, spacing: WPSpacing.xxxs) {
+                        Text(row.name)
+                            .font(.displayMedium)
+                            .foregroundStyle(Color.warmPaper)
+                        Text(tourCountLabel(row.publishedTourCount))
+                            .font(.overline)
+                            .tracking(1.5)
+                            .foregroundStyle(Color.sandstone)
+                    }
+                    .padding(WPSpacing.sm)
+                    .frame(width: geo.size.width, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(WPSpacing.sm)
             }
+            .frame(height: 180)
 
             Text(row.description)
                 .font(.bodySecondary)

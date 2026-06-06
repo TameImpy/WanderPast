@@ -4,6 +4,7 @@ import WanderpastCore
 /// Lists every published tour for a single city, with the editorial pick rendered as a hero card on top.
 struct TourListView: View {
     @ObservedObject var viewModel: TourListViewModel
+    @EnvironmentObject var completedTours: CompletedToursStore
     let cityName: String
     let repository: CatalogueRepository
 
@@ -150,6 +151,12 @@ struct TourListView: View {
                     }
                     .padding(WPSpacing.sm)
                     .frame(width: geo.size.width, alignment: .leading)
+
+                    if completedTours.isCompleted(tourID: tour.id) {
+                        CompletedBadge()
+                            .padding(WPSpacing.xs)
+                            .frame(width: geo.size.width, alignment: .topTrailing)
+                    }
                 }
             }
             .frame(height: 220)
@@ -189,10 +196,15 @@ struct TourListView: View {
             }
 
             VStack(alignment: .leading, spacing: WPSpacing.xxs) {
-                Text(tour.era.uppercased())
-                    .font(.overline)
-                    .tracking(1.2)
-                    .foregroundStyle(Color.terracotta)
+                HStack(spacing: WPSpacing.xs) {
+                    Text(tour.era.uppercased())
+                        .font(.overline)
+                        .tracking(1.2)
+                        .foregroundStyle(Color.terracotta)
+                    if completedTours.isCompleted(tourID: tour.id) {
+                        CompletedBadge()
+                    }
+                }
                 Text(tour.title)
                     .font(.displaySmall)
                     .foregroundStyle(Color.deepInk)

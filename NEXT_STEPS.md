@@ -16,6 +16,7 @@
 - **Issue #5** (Tracer Bullet) — done end-to-end, closed on GitHub with deferred items noted in the close comment. Tower of London tour plays through `InTourView` in the simulator. Known follow-ups still tracked in this file's "Issue #5 — remaining" section below.
 - **Issue #6** (Tour catalogue) — done, closed on GitHub. Eleven slices: backend 0–6 (parser, queries, cache policy, fetcher, cache, repository), Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView), Slice 9 (catalogue-driven TourDetailView with hero, MapKit, preview clip), and Slice 10 (CityBrowseView as the app root, end-to-end navigation, `TourCoordinator.startTour(tour:waypoints:)` driven by the loaded data instead of `SampleData`). 83 tests in 13 suites. Hero-image horizontal-overflow bug fixed in `67b7950` (use `GeometryReader` to hard-cap width — `.frame(maxWidth: .infinity)` alone is a request, not a cap, and the layout broke for any Unsplash crop whose intrinsic width exceeded the viewport).
 - **Issue #7** (Proximity-based discovery) — done, QA'd against real-device location on 2026-06-06. Four slices: Slice 1 (`Coordinate`, `NearbyTour`, `Catalogue.nearbyTours(from:within:)` with haversine — 7 tests), Slice 2 (`LocationAuthorization`, `NearbyToursState.from(authorization:userLocation:loadResult:radiusMeters:)` — 8 tests), Slice 3 (`LiveLocationProvider` CoreLocation wrapper, `NearbyToursViewModel` ObservableObject combining repo + location), Slice 4 ("Near you" horizontal-scroll section in `CityBrowseView` with distance overlays on tour cards, hidden when location denied or section empty). 98 tests in 15 suites across `WanderpastCore`. Info.plist `NSLocationWhenInUseUsageDescription` updated to mention discovery. Ready to close on GitHub.
+- **Issue #11** (In-tour UX) — implementation complete pending visual QA. Seven slices: Slice A (`TourProgress` + `TourService.progress` for "Stop N of M" — 4 tests), Slice B (`TourService.nextNavigationWaypointID` for the Help-I'm-lost target — 5 tests), Slice C (Codable `CompletedTours` value type — 4 tests), Slice D (`CompletedToursStore` ObservableObject persisting via UserDefaults under `wanderpast.completedTours.v1`; `TourCoordinator.attach(completedToursStore:)` and auto-mark on `tourStatus == .completed`; `WanderpastApp` owns the store and injects it as `EnvironmentObject`), Slice E (redesigned `InTourView` with warm-paper background, Fraunces overline + stop title, 84pt terracotta play/pause with shadow + parchment skip pills, and a "Help, I'm lost" capsule button that fires `MKMapItem.openInMaps(launchOptions:)` with walking directions to `coordinator.nextNavigationWaypoint`), Slice F (`CompletionCardView` overlay with a `ClusterPathView` that normalises waypoint lat/long onto a dashed terracotta path inside a parchment tile, displays `tour.completionSummary`, and dismisses `InTourView` via "Done"), Slice G (reusable `CompletedBadge` rendered on the `TourListView` FEATURED hero, the MORE TOURS row, and the `CityBrowseView` "Near you" cards). 111 tests in 18 suites across `WanderpastCore`. iOS build succeeds. Remaining: in-simulator visual QA of the in-tour screen, Help I'm lost handoff, completion card, and badge after a completed tour (`xcrun simctl` can't drive taps inside the app).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -110,10 +111,16 @@ Manual QA checklist (then Issue #6 closes):
 ## Remaining GitHub issues (in priority order)
 
 ### Suggested next pickup
-**Issue #11** (In-tour UX) is the recommended next ticket now that discovery has landed. It polishes `InTourView` (controls, Help I'm lost, completion card) and is trivially simulator-testable. After that, Issues #8 (Sign in with Apple) and #9/#10 (IAP) unblock commerce.
+**Issue #8** (Sign in with Apple + user state persistence) is the recommended next ticket now that #11 is implementation-complete. Auth unblocks #9 / #10 (IAP) which are the commerce gates for soft launch. Issue #11 still needs in-simulator visual QA before it can close on GitHub (see "Issue #11 — QA checklist" below).
 
-### Core experience (do these next)
-- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card *(recommended next)*
+### Issue #11 — QA checklist (before closing on GitHub)
+- [ ] Launch app, tap London → Tower of London tour → Start Tour. Verify `InTourView` shows warm-paper background, "STOP 1 OF 3" overline, large terracotta play/pause button, parchment skip pills.
+- [ ] Tap "Help, I'm lost" — Apple Maps should open with walking directions to the next waypoint (e.g. Traitors' Gate, then Beauchamp Tower after first stop is reached).
+- [ ] Skip forward through all 3 waypoints. After the final transition completes, the completion card overlay should appear with the stylised cluster path + completion summary. Tap Done to dismiss.
+- [ ] Return to TourListView for London — Tower of London tour should now show a "COMPLETED" pill badge on both the FEATURED hero and the MORE TOURS card (also on the "Near you" card on the cities screen if location is granted).
+- [ ] Kill and relaunch the app — completion marker should still be present (UserDefaults persistence).
+
+### Core experience
 
 ### Auth & commerce
 - **Issue #8** — Sign in with Apple + user state persistence
@@ -165,8 +172,10 @@ Wanderpast/
 │   │   ├── ThemeBrowseState.swift        # Pure mapper LoadResult → theme-browse state (5 tests)
 │   │   ├── TourDetailState.swift         # Pure mapper LoadResult + tourID → detail state (6 tests)
 │   │   ├── Proximity.swift               # Coordinate, NearbyTour, Catalogue.nearbyTours(from:within:) — haversine (7 tests)
-│   │   └── NearbyToursState.swift        # LocationAuthorization + pure mapper auth + location + LoadResult → state (8 tests)
-│   └── Tests/WanderpastCoreTests/        # 98 tests total in 15 suites
+│   │   ├── NearbyToursState.swift        # LocationAuthorization + pure mapper auth + location + LoadResult → state (8 tests)
+│   │   ├── TourProgress.swift            # "Stop N of M" value type + TourService.progress (4 tests)
+│   │   └── CompletedTours.swift          # Codable set of finished tour IDs (4 tests)
+│   └── Tests/WanderpastCoreTests/        # 111 tests total in 18 suites
 ├── Resources/                            # Repo-level resources (served via GitHub raw URL)
 │   └── catalogue.json                    # Production catalogue: London + York, 3 tours, 10 waypoints
 ├── Wanderpast/                           # Main iOS app
@@ -176,7 +185,10 @@ Wanderpast/
 │   │   └── LiveLocationProvider.swift    # CoreLocation wrapper — discovery (coarse, low-power)
 │   ├── Tour/
 │   │   ├── TourCoordinator.swift         # ObservableObject bridge to SwiftUI
-│   │   └── InTourView.swift              # In-tour UI
+│   │   ├── InTourView.swift              # In-tour UI (controls, Help I'm lost, completion overlay)
+│   │   ├── CompletedToursStore.swift     # UserDefaults-backed wrapper around CompletedTours
+│   │   ├── CompletionCardView.swift      # Post-tour keepsake with stylised cluster path
+│   │   └── CompletedBadge.swift          # Reusable "COMPLETED" pill used on tour cards
 │   ├── Browse/
 │   │   ├── CityBrowseViewModel.swift     # ObservableObject — wraps CatalogueRepository
 │   │   ├── CityBrowseView.swift          # SwiftUI screen — list of city cards (NavigationLink → TourListView)

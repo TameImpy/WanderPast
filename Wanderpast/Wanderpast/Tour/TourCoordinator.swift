@@ -10,6 +10,14 @@ final class TourCoordinator: ObservableObject {
     let audioEngine = AudioEngine()
     let geofenceManager = LiveGeofenceManager()
 
+    /// Optional persistence sink for completed tour IDs. Wired up by `WanderpastApp`
+    /// so that finishing a tour leaves a durable "completed" marker for library cards.
+    private weak var completedToursStore: CompletedToursStore?
+
+    func attach(completedToursStore: CompletedToursStore) {
+        self.completedToursStore = completedToursStore
+    }
+
     private var currentTour: Tour?
     private var waypoints: [Waypoint] = []
 
@@ -133,6 +141,20 @@ final class TourCoordinator: ObservableObject {
     var completedCount: Int { service.completedWaypointIDs.count }
     var totalWaypoints: Int { waypoints.count }
 
+    var progress: TourProgress { service.progress }
+
+    /// The tour currently in progress (or just completed) — exposes data the
+    /// completion card needs: title, completion summary, waypoint coordinates.
+    var tour: Tour? { currentTour }
+    var allWaypoints: [Waypoint] { waypoints }
+
+    /// Coordinates for the "Help I'm lost" Apple Maps hand-off, or `nil` if
+    /// there is nowhere to navigate to (tour not started, or fully completed).
+    var nextNavigationWaypoint: Waypoint? {
+        guard let id = service.nextNavigationWaypointID else { return nil }
+        return waypoints.first(where: { $0.id == id })
+    }
+
     // MARK: - Event handlers
 
     private func handleWaypointTriggered(_ id: String) {
@@ -162,6 +184,9 @@ final class TourCoordinator: ObservableObject {
     private func handleTransitionFinished() {
         service.onTransitionAudioFinished()
         saveCheckpoint()
+        if service.tourStatus == .completed, let tour = currentTour {
+            completedToursStore?.markCompleted(tourID: tour.id)
+        }
         objectWillChange.send()
     }
 

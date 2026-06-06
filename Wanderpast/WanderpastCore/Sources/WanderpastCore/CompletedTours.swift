@@ -9,6 +9,8 @@ public struct CompletedTours: Codable, Sendable, Equatable {
 
     public var count: Int { tourIDs.count }
 
+    public var allIDs: [String] { Array(tourIDs) }
+
     public func isCompleted(tourID: String) -> Bool {
         tourIDs.contains(tourID)
     }

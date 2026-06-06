@@ -8,6 +8,7 @@ struct WanderpastApp: App {
     @StateObject private var cityBrowseVM: CityBrowseViewModel
     @StateObject private var nearbyVM: NearbyToursViewModel
     @StateObject private var completedToursStore = CompletedToursStore()
+    @StateObject private var accountStore: AccountStore
 
     private let repository: CatalogueRepository
 
@@ -19,6 +20,9 @@ struct WanderpastApp: App {
         _cityBrowseVM = StateObject(wrappedValue: CityBrowseViewModel(repository: repo))
         _nearbyVM = StateObject(
             wrappedValue: NearbyToursViewModel(repository: repo, locationProvider: provider)
+        )
+        _accountStore = StateObject(
+            wrappedValue: AccountStore(backend: InMemoryBackendUserClient())
         )
     }
 
@@ -33,7 +37,11 @@ struct WanderpastApp: App {
             }
             .environmentObject(coordinator)
             .environmentObject(completedToursStore)
-            .onAppear { coordinator.attach(completedToursStore: completedToursStore) }
+            .environmentObject(accountStore)
+            .onAppear {
+                coordinator.attach(completedToursStore: completedToursStore)
+                accountStore.attach(completedToursStore: completedToursStore)
+            }
         }
     }
 

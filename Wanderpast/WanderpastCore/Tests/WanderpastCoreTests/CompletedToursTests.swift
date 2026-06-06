@@ -34,6 +34,15 @@ struct CompletedToursTests {
         #expect(tours.count == 1)
     }
 
+    @Test("allIDs returns every completed tour ID, suitable for sync payloads")
+    func allIDsReturnsEveryCompletedID() {
+        var tours = CompletedTours()
+        tours.markCompleted(tourID: "tower-of-london-prisoners")
+        tours.markCompleted(tourID: "york-shambles")
+
+        #expect(Set(tours.allIDs) == ["tower-of-london-prisoners", "york-shambles"])
+    }
+
     @Test("Codable round-trip preserves the set of completed tour IDs")
     func codableRoundTrip() throws {
         var tours = CompletedTours()

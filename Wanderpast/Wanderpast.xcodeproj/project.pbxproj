@@ -27,6 +27,9 @@
 		A10029 /* ThemeBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10029 /* ThemeBrowseView.swift */; };
 		A10036 /* TourDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10036 /* TourDetailViewModel.swift */; };
 		A10037 /* PreviewClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10037 /* PreviewClipButton.swift */; };
+		A10038 /* CompletedToursStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10038 /* CompletedToursStore.swift */; };
+		A10039 /* CompletionCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10039 /* CompletionCardView.swift */; };
+		A10040B /* CompletedBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10040B /* CompletedBadge.swift */; };
 		A10060 /* LiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10060 /* LiveLocationProvider.swift */; };
 		A10061 /* NearbyToursViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10061 /* NearbyToursViewModel.swift */; };
 		A10030 /* ambient.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10030 /* ambient.m4a */; };
@@ -66,6 +69,9 @@
 		B10029 /* ThemeBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBrowseView.swift; sourceTree = "<group>"; };
 		B10036 /* TourDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailViewModel.swift; sourceTree = "<group>"; };
 		B10037 /* PreviewClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewClipButton.swift; sourceTree = "<group>"; };
+		B10038 /* CompletedToursStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedToursStore.swift; sourceTree = "<group>"; };
+		B10039 /* CompletionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionCardView.swift; sourceTree = "<group>"; };
+		B10040B /* CompletedBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedBadge.swift; sourceTree = "<group>"; };
 		B10060 /* LiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLocationProvider.swift; sourceTree = "<group>"; };
 		B10061 /* NearbyToursViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyToursViewModel.swift; sourceTree = "<group>"; };
 		B10030 /* ambient.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ambient.m4a; sourceTree = "<group>"; };
@@ -177,6 +183,9 @@
 			children = (
 				B10022 /* TourCoordinator.swift */,
 				B10023 /* InTourView.swift */,
+				B10038 /* CompletedToursStore.swift */,
+				B10039 /* CompletionCardView.swift */,
+				B10040B /* CompletedBadge.swift */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -331,6 +340,9 @@
 				A10029 /* ThemeBrowseView.swift in Sources */,
 				A10036 /* TourDetailViewModel.swift in Sources */,
 				A10037 /* PreviewClipButton.swift in Sources */,
+				A10038 /* CompletedToursStore.swift in Sources */,
+				A10039 /* CompletionCardView.swift in Sources */,
+				A10040B /* CompletedBadge.swift in Sources */,
 				A10060 /* LiveLocationProvider.swift in Sources */,
 				A10061 /* NearbyToursViewModel.swift in Sources */,
 			);

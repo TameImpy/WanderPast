@@ -6,6 +6,7 @@ import WanderpastCore
 struct CityBrowseView: View {
     @ObservedObject var viewModel: CityBrowseViewModel
     @ObservedObject var nearbyViewModel: NearbyToursViewModel
+    @EnvironmentObject var completedTours: CompletedToursStore
     let repository: CatalogueRepository
 
     var body: some View {
@@ -124,6 +125,12 @@ struct CityBrowseView: View {
                     .background(Color.terracotta)
                     .clipShape(Capsule())
                     .padding(WPSpacing.xs)
+
+                if completedTours.isCompleted(tourID: item.tour.id) {
+                    CompletedBadge()
+                        .padding(WPSpacing.xs)
+                        .frame(width: 220, height: 140, alignment: .topTrailing)
+                }
             }
 
             VStack(alignment: .leading, spacing: WPSpacing.xxxs) {

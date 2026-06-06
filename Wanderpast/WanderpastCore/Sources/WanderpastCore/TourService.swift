@@ -117,6 +117,34 @@ public struct TourService: Sendable {
         }
     }
 
+    /// The waypoint the user should walk toward right now — the destination shown by
+    /// "Help I'm lost". Skips the currently-playing waypoint (the user has reached it)
+    /// and any already-completed waypoints. `nil` when no tour is running or the tour
+    /// is fully completed.
+    public var nextNavigationWaypointID: String? {
+        guard let manifest else { return nil }
+        let completed = Set(completedWaypointIDs)
+        let current = currentWaypointID
+        return manifest.waypoints.first { wp in
+            !completed.contains(wp.id) && wp.id != current
+        }?.id
+    }
+
+    /// Human-friendly position through the tour for the "Stop N of M" indicator.
+    public var progress: TourProgress {
+        let total = manifest?.waypoints.count ?? 0
+        let current: Int
+        switch tourStatus {
+        case .notStarted:
+            current = 0
+        case .inProgress:
+            current = min(completedWaypointIDs.count + 1, total)
+        case .completed:
+            current = total
+        }
+        return TourProgress(currentStopNumber: current, totalStops: total)
+    }
+
     public mutating func onTransitionAudioFinished() {
         guard let manifest else { return }
         if completedWaypointIDs.count >= manifest.waypoints.count {

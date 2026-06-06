@@ -7,6 +7,7 @@ struct WanderpastApp: App {
     @StateObject private var locationProvider = LiveLocationProvider()
     @StateObject private var cityBrowseVM: CityBrowseViewModel
     @StateObject private var nearbyVM: NearbyToursViewModel
+    @StateObject private var completedToursStore = CompletedToursStore()
 
     private let repository: CatalogueRepository
 
@@ -31,6 +32,8 @@ struct WanderpastApp: App {
                 )
             }
             .environmentObject(coordinator)
+            .environmentObject(completedToursStore)
+            .onAppear { coordinator.attach(completedToursStore: completedToursStore) }
         }
     }
 

@@ -2,14 +2,17 @@ import SwiftUI
 import WanderpastCore
 
 /// Top-level browse screen: lists UK towns and cities with published tours.
+/// When location is granted, a "Near you" section surfaces tours nearest to the user.
 struct CityBrowseView: View {
     @ObservedObject var viewModel: CityBrowseViewModel
+    @ObservedObject var nearbyViewModel: NearbyToursViewModel
     let repository: CatalogueRepository
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: WPSpacing.lg) {
                 header
+                nearbySection
                 content
             }
             .padding(.horizontal, WPSpacing.md)
@@ -20,10 +23,11 @@ struct CityBrowseView: View {
             if case .loading = viewModel.state {
                 viewModel.load()
             }
+            nearbyViewModel.start()
         }
     }
 
-    // MARK: - Sections
+    // MARK: - Header
 
     private var header: some View {
         VStack(alignment: .leading, spacing: WPSpacing.xxs) {
@@ -36,6 +40,122 @@ struct CityBrowseView: View {
                 .foregroundStyle(Color.deepInk)
         }
     }
+
+    // MARK: - Near you
+
+    @ViewBuilder
+    private var nearbySection: some View {
+        switch nearbyViewModel.state {
+        case .hidden, .error:
+            EmptyView()
+        case .locating:
+            nearbyHeader(subtitle: "Finding tours near you…")
+        case .loaded(let nearby) where nearby.isEmpty:
+            nearbyHeader(subtitle: "No tours within reach. Browse cities below.")
+        case .loaded(let nearby):
+            VStack(alignment: .leading, spacing: WPSpacing.sm) {
+                nearbyHeader(subtitle: "Tours closest to your current location")
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: WPSpacing.sm) {
+                        ForEach(nearby, id: \.tour.id) { item in
+                            NavigationLink {
+                                TourDetailView(
+                                    viewModel: TourDetailViewModel(
+                                        tourID: item.tour.id,
+                                        repository: repository
+                                    )
+                                )
+                            } label: {
+                                nearbyCard(item)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func nearbyHeader(subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: WPSpacing.xxs) {
+            Text("NEAR YOU")
+                .font(.overline)
+                .tracking(2)
+                .foregroundStyle(Color.terracotta)
+            Text(subtitle)
+                .font(.bodySecondary)
+                .foregroundStyle(Color.stone)
+        }
+    }
+
+    private func nearbyCard(_ item: NearbyTour) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack(alignment: .bottomLeading) {
+                Group {
+                    if let url = item.tour.heroImageURL {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            default:
+                                Color.charcoal
+                            }
+                        }
+                    } else {
+                        Color.charcoal
+                    }
+                }
+                .frame(width: 220, height: 140)
+                .clipped()
+
+                LinearGradient(
+                    colors: [Color.charcoal.opacity(0.0), Color.charcoal.opacity(0.75)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(width: 220, height: 140)
+
+                Text(distanceLabel(item.distanceMeters))
+                    .font(.overline)
+                    .tracking(1.5)
+                    .foregroundStyle(Color.warmPaper)
+                    .padding(.horizontal, WPSpacing.xs)
+                    .padding(.vertical, WPSpacing.xxxs)
+                    .background(Color.terracotta)
+                    .clipShape(Capsule())
+                    .padding(WPSpacing.xs)
+            }
+
+            VStack(alignment: .leading, spacing: WPSpacing.xxxs) {
+                Text(item.tour.title)
+                    .font(.displaySmall)
+                    .foregroundStyle(Color.deepInk)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                Text(item.tour.era.uppercased())
+                    .font(.overline)
+                    .tracking(1.5)
+                    .foregroundStyle(Color.stone)
+            }
+            .padding(WPSpacing.sm)
+            .frame(width: 220, alignment: .leading)
+        }
+        .background(Color.parchment)
+        .clipShape(RoundedRectangle(cornerRadius: WPRadius.lg))
+    }
+
+    private func distanceLabel(_ meters: Double) -> String {
+        if meters < 1000 {
+            return "STARTS \(Int(meters.rounded())) M AWAY"
+        }
+        let km = meters / 1000
+        if km < 10 {
+            return String(format: "STARTS %.1f KM AWAY", km)
+        }
+        return "STARTS \(Int(km.rounded())) KM AWAY"
+    }
+
+    // MARK: - Cities
 
     @ViewBuilder
     private var content: some View {

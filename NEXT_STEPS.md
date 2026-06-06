@@ -15,6 +15,7 @@
 - **Issue #4** (GeofenceManager) — done, closed on GitHub. `GeofenceState` pure state machine with 8 tests.
 - **Issue #5** (Tracer Bullet) — done end-to-end, closed on GitHub with deferred items noted in the close comment. Tower of London tour plays through `InTourView` in the simulator. Known follow-ups still tracked in this file's "Issue #5 — remaining" section below.
 - **Issue #6** (Tour catalogue) — done, closed on GitHub. Eleven slices: backend 0–6 (parser, queries, cache policy, fetcher, cache, repository), Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView), Slice 9 (catalogue-driven TourDetailView with hero, MapKit, preview clip), and Slice 10 (CityBrowseView as the app root, end-to-end navigation, `TourCoordinator.startTour(tour:waypoints:)` driven by the loaded data instead of `SampleData`). 83 tests in 13 suites. Hero-image horizontal-overflow bug fixed in `67b7950` (use `GeometryReader` to hard-cap width — `.frame(maxWidth: .infinity)` alone is a request, not a cap, and the layout broke for any Unsplash crop whose intrinsic width exceeded the viewport).
+- **Issue #7** (Proximity-based discovery) — done, QA'd against real-device location on 2026-06-06. Four slices: Slice 1 (`Coordinate`, `NearbyTour`, `Catalogue.nearbyTours(from:within:)` with haversine — 7 tests), Slice 2 (`LocationAuthorization`, `NearbyToursState.from(authorization:userLocation:loadResult:radiusMeters:)` — 8 tests), Slice 3 (`LiveLocationProvider` CoreLocation wrapper, `NearbyToursViewModel` ObservableObject combining repo + location), Slice 4 ("Near you" horizontal-scroll section in `CityBrowseView` with distance overlays on tour cards, hidden when location denied or section empty). 98 tests in 15 suites across `WanderpastCore`. Info.plist `NSLocationWhenInUseUsageDescription` updated to mention discovery. Ready to close on GitHub.
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
 - Placeholder audio: medieval ambient soundscape (Freesound.org), TTS narration for 3 waypoints
@@ -109,15 +110,10 @@ Manual QA checklist (then Issue #6 closes):
 ## Remaining GitHub issues (in priority order)
 
 ### Suggested next pickup
-**Issue #7** (Proximity-based discovery) is the recommended next ticket. Discovery is upstream of in-tour polish — without it, the only way to find a tour is to already know the city, which is fine for a two-city demo but not for an MVP whose core promise is location-based audio tours. Context is also hot: Issue #6 just established the catalogue + browse pattern, and Issue #4 (LiveGeofenceManager) already touched CoreLocation.
-
-The simulator-GPS objection is real but not blocking — the proximity ranker (given a location + catalogue, return tours within X km sorted by distance) is a pure function that lives in `WanderpastCore` with stubbed `CLLocation` inputs and gets fully unit-tested. Only the live `CLLocationManager` plumbing needs a real device, and Xcode's *Simulate Location* feature is good enough for most of that too.
-
-Issue #11 (In-tour UX) is a strong follow-up immediately after — it polishes `InTourView` (controls, Help I'm lost, completion card) and is trivially simulator-testable, but it's polish on a flow users reach *after* discovery, so it's lower-leverage until #7 lands.
+**Issue #11** (In-tour UX) is the recommended next ticket now that discovery has landed. It polishes `InTourView` (controls, Help I'm lost, completion card) and is trivially simulator-testable. After that, Issues #8 (Sign in with Apple) and #9/#10 (IAP) unblock commerce.
 
 ### Core experience (do these next)
-- **Issue #7** — Proximity-based discovery: nearby tours *(recommended next)*
-- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card *(strong follow-up after #7)*
+- **Issue #11** — In-tour UX: controls, Help I'm lost, and completion card *(recommended next)*
 
 ### Auth & commerce
 - **Issue #8** — Sign in with Apple + user state persistence
@@ -167,13 +163,17 @@ Wanderpast/
 │   │   ├── CityBrowseState.swift         # Pure mapper LoadResult → browse state (5 tests)
 │   │   ├── TourListState.swift           # Pure mapper LoadResult + cityID → tour-list state (7 tests)
 │   │   ├── ThemeBrowseState.swift        # Pure mapper LoadResult → theme-browse state (5 tests)
-│   │   └── TourDetailState.swift         # Pure mapper LoadResult + tourID → detail state (6 tests)
-│   └── Tests/WanderpastCoreTests/        # 83 tests total in 13 suites
+│   │   ├── TourDetailState.swift         # Pure mapper LoadResult + tourID → detail state (6 tests)
+│   │   ├── Proximity.swift               # Coordinate, NearbyTour, Catalogue.nearbyTours(from:within:) — haversine (7 tests)
+│   │   └── NearbyToursState.swift        # LocationAuthorization + pure mapper auth + location + LoadResult → state (8 tests)
+│   └── Tests/WanderpastCoreTests/        # 98 tests total in 15 suites
 ├── Resources/                            # Repo-level resources (served via GitHub raw URL)
 │   └── catalogue.json                    # Production catalogue: London + York, 3 tours, 10 waypoints
 ├── Wanderpast/                           # Main iOS app
 │   ├── Audio/AudioEngine.swift           # AVFoundation wrapper
-│   ├── Location/LiveGeofenceManager.swift  # CoreLocation wrapper
+│   ├── Location/
+│   │   ├── LiveGeofenceManager.swift     # CoreLocation wrapper — in-tour waypoint triggering
+│   │   └── LiveLocationProvider.swift    # CoreLocation wrapper — discovery (coarse, low-power)
 │   ├── Tour/
 │   │   ├── TourCoordinator.swift         # ObservableObject bridge to SwiftUI
 │   │   └── InTourView.swift              # In-tour UI
@@ -185,7 +185,8 @@ Wanderpast/
 │   │   ├── ThemeBrowseViewModel.swift    # ObservableObject — era-grouped browse
 │   │   ├── ThemeBrowseView.swift         # SwiftUI screen — era sections (sibling entry, not wired yet)
 │   │   ├── TourDetailViewModel.swift     # ObservableObject — single-tour detail
-│   │   └── PreviewClipButton.swift       # SwiftUI pill that streams a 60-sec preview via AudioEngine
+│   │   ├── PreviewClipButton.swift       # SwiftUI pill that streams a 60-sec preview via AudioEngine
+│   │   └── NearbyToursViewModel.swift    # ObservableObject — combines repo + LiveLocationProvider into NearbyToursState
 │   ├── DesignSystem/                     # Color, Typography, Spacing tokens
 │   ├── Resources/
 │   │   ├── Audio/                        # Bundled .m4a audio files

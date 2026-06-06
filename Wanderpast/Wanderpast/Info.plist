@@ -8,7 +8,7 @@
 		<string>location</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Wanderpast uses your location to trigger audio narration as you reach each waypoint on the tour.</string>
+	<string>Wanderpast uses your location to surface audio tours near you and to trigger narration as you reach each waypoint on a tour.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Wanderpast uses your location in the background to keep triggering tour audio as you walk between waypoints.</string>
 	<key>UIAppFonts</key>

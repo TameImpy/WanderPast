@@ -16,6 +16,8 @@
 - **Issue #5** (Tracer Bullet) — done end-to-end, closed on GitHub with deferred items noted in the close comment. Tower of London tour plays through `InTourView` in the simulator. Known follow-ups still tracked in this file's "Issue #5 — remaining" section below.
 - **Issue #6** (Tour catalogue) — done, closed on GitHub. Eleven slices: backend 0–6 (parser, queries, cache policy, fetcher, cache, repository), Slice 7 (CityBrowseView), Slice 8 (TourListView + ThemeBrowseView), Slice 9 (catalogue-driven TourDetailView with hero, MapKit, preview clip), and Slice 10 (CityBrowseView as the app root, end-to-end navigation, `TourCoordinator.startTour(tour:waypoints:)` driven by the loaded data instead of `SampleData`). 83 tests in 13 suites. Hero-image horizontal-overflow bug fixed in `67b7950` (use `GeometryReader` to hard-cap width — `.frame(maxWidth: .infinity)` alone is a request, not a cap, and the layout broke for any Unsplash crop whose intrinsic width exceeded the viewport).
 - **Issue #7** (Proximity-based discovery) — done, QA'd against real-device location on 2026-06-06. Four slices: Slice 1 (`Coordinate`, `NearbyTour`, `Catalogue.nearbyTours(from:within:)` with haversine — 7 tests), Slice 2 (`LocationAuthorization`, `NearbyToursState.from(authorization:userLocation:loadResult:radiusMeters:)` — 8 tests), Slice 3 (`LiveLocationProvider` CoreLocation wrapper, `NearbyToursViewModel` ObservableObject combining repo + location), Slice 4 ("Near you" horizontal-scroll section in `CityBrowseView` with distance overlays on tour cards, hidden when location denied or section empty). 98 tests in 15 suites across `WanderpastCore`. Info.plist `NSLocationWhenInUseUsageDescription` updated to mention discovery. Ready to close on GitHub.
+- **Issue #8** (Sign in with Apple + user state persistence) — implementation complete pending end-to-end QA with a real Apple ID. Six pure-logic slices in `WanderpastCore`: `AccountIdentity` + `AccountState` enum (3 tests); `RemoteUserPayload` Codable wire format with snake_case keys, ISO8601 dates, sparse-tolerant decode (2 tests); `RemoteUserPayload.merging(local:remote:)` unioning completed tour IDs and owned product IDs and taking max `updated_at` (2 tests); `UserSyncState` state machine — `idle | syncing | synced(at:) | failed(retryable:)` with begin/succeeded/failed events, network and server failures retryable, auth not (6 tests); `BackendUserClient` protocol + `InMemoryBackendUserClient` actor stub so the app wires end-to-end without AWS (2 tests); `AccountSyncOrchestrator.sync(stableID:local:backend:now:)` doing fetch → merge → upsert (2 tests). Plus `CompletedTours.allIDs` for sync payloads (1 test). Framework layer in main app: `AppleSignInController` (ASAuthorizationAppleIDProvider async wrapper), `AccountStore` ObservableObject (persists `AccountIdentity` in UserDefaults under `wanderpast.account.identity.v1`, drives sign-in/out, syncs on tour completion via Combine subscription to `CompletedToursStore.$tours`), `SettingsView` (SignInWithAppleButton, account info, Sync now, Sign out, sync status footer). UI entry: gear-person icon in `CityBrowseView` toolbar. `WanderpastApp` constructs `AccountStore(backend: InMemoryBackendUserClient())` and attaches it to `CompletedToursStore`. `Wanderpast.entitlements` adds `com.apple.developer.applesignin = Default` and `CODE_SIGN_ENTITLEMENTS` is wired in both Debug and Release. 137 tests in 25 suites across `WanderpastCore`, all passing. iOS build succeeds. Remaining: (1) enable the "Sign in with Apple" capability for the App ID in the Apple Developer portal so the entitlement provisions; (2) end-to-end QA — tap gear → Sign in with Apple sheet, complete sign-in, complete a tour, verify it appears in the in-memory backend, sign out, sign back in, confirm the completion is restored; (3) replace `InMemoryBackendUserClient` with a real Lambda+DynamoDB-backed `BackendUserClient` (separate follow-up — Issue #8 closes once the stub-backed end-to-end flow is QA'd, real backend can land alongside #9/#10 IAP work).
+
 - **Issue #11** (In-tour UX) — implementation complete pending visual QA. Seven slices: Slice A (`TourProgress` + `TourService.progress` for "Stop N of M" — 4 tests), Slice B (`TourService.nextNavigationWaypointID` for the Help-I'm-lost target — 5 tests), Slice C (Codable `CompletedTours` value type — 4 tests), Slice D (`CompletedToursStore` ObservableObject persisting via UserDefaults under `wanderpast.completedTours.v1`; `TourCoordinator.attach(completedToursStore:)` and auto-mark on `tourStatus == .completed`; `WanderpastApp` owns the store and injects it as `EnvironmentObject`), Slice E (redesigned `InTourView` with warm-paper background, Fraunces overline + stop title, 84pt terracotta play/pause with shadow + parchment skip pills, and a "Help, I'm lost" capsule button that fires `MKMapItem.openInMaps(launchOptions:)` with walking directions to `coordinator.nextNavigationWaypoint`), Slice F (`CompletionCardView` overlay with a `ClusterPathView` that normalises waypoint lat/long onto a dashed terracotta path inside a parchment tile, displays `tour.completionSummary`, and dismisses `InTourView` via "Done"), Slice G (reusable `CompletedBadge` rendered on the `TourListView` FEATURED hero, the MORE TOURS row, and the `CityBrowseView` "Near you" cards). 111 tests in 18 suites across `WanderpastCore`. iOS build succeeds. Remaining: in-simulator visual QA of the in-tour screen, Help I'm lost handoff, completion card, and badge after a completed tour (`xcrun simctl` can't drive taps inside the app).
 - Design system: colours, spacing, typography tokens all implemented
 - Fonts bundled: Fraunces (display/serif), Inter (body/sans), JetBrains Mono (overlines/metadata)
@@ -111,7 +113,15 @@ Manual QA checklist (then Issue #6 closes):
 ## Remaining GitHub issues (in priority order)
 
 ### Suggested next pickup
-**Issue #8** (Sign in with Apple + user state persistence) is the recommended next ticket now that #11 is implementation-complete. Auth unblocks #9 / #10 (IAP) which are the commerce gates for soft launch. Issue #11 still needs in-simulator visual QA before it can close on GitHub (see "Issue #11 — QA checklist" below).
+**Issue #9** (IAP: individual tour purchase) is the recommended next ticket now that #8 is implementation-complete behind a stubbed backend. The pure-logic shape of #9 (Codable purchase records → backend client → owned-products merge) mirrors what we just did for #8 and can re-use `BackendUserClient` + `AccountSyncOrchestrator`. Both Issue #8 and Issue #11 still need end-to-end QA before closing on GitHub — see the QA checklists below.
+
+### Issue #8 — QA checklist (before closing on GitHub)
+- [ ] Enable "Sign in with Apple" capability for the `app.wanderpast.Wanderpast` App ID in the Apple Developer portal so the entitlement provisions on signing.
+- [ ] Launch app, tap the person icon in the top-right of the cities screen, tap "Sign in with Apple", complete the Apple sheet. Verify the account name/email appears in Settings.
+- [ ] Complete a tour (Tower of London) while signed in. Verify the "Synced at HH:MM" status appears in Settings.
+- [ ] Sign out, sign back in, return to the cities screen. Verify the completed tour still shows the COMPLETED badge (state restored from `InMemoryBackendUserClient`).
+- [ ] Confirm free tours remain accessible without signing in (browse, start, play through a tour with `state == .signedOut`).
+- [ ] **Real backend (separate follow-up):** swap `InMemoryBackendUserClient` in `WanderpastApp.init` for a Lambda+DynamoDB-backed client. The protocol is in place; no other code should need to change.
 
 ### Issue #11 — QA checklist (before closing on GitHub)
 - [ ] Launch app, tap London → Tower of London tour → Start Tour. Verify `InTourView` shows warm-paper background, "STOP 1 OF 3" overline, large terracotta play/pause button, parchment skip pills.
@@ -174,8 +184,13 @@ Wanderpast/
 │   │   ├── Proximity.swift               # Coordinate, NearbyTour, Catalogue.nearbyTours(from:within:) — haversine (7 tests)
 │   │   ├── NearbyToursState.swift        # LocationAuthorization + pure mapper auth + location + LoadResult → state (8 tests)
 │   │   ├── TourProgress.swift            # "Stop N of M" value type + TourService.progress (4 tests)
-│   │   └── CompletedTours.swift          # Codable set of finished tour IDs (4 tests)
-│   └── Tests/WanderpastCoreTests/        # 111 tests total in 18 suites
+│   │   ├── CompletedTours.swift          # Codable set of finished tour IDs (5 tests)
+│   │   ├── AccountState.swift            # AccountIdentity + AccountState enum (3 tests)
+│   │   ├── RemoteUserPayload.swift       # snake_case Codable wire format + merge policy (4 tests)
+│   │   ├── UserSyncState.swift           # sync state machine + UserSyncEvent / UserSyncFailure (6 tests)
+│   │   ├── BackendUserClient.swift       # Protocol + InMemoryBackendUserClient actor stub (2 tests)
+│   │   └── AccountSyncOrchestrator.swift # Pure sync orchestration (2 tests)
+│   └── Tests/WanderpastCoreTests/        # 137 tests total in 25 suites
 ├── Resources/                            # Repo-level resources (served via GitHub raw URL)
 │   └── catalogue.json                    # Production catalogue: London + York, 3 tours, 10 waypoints
 ├── Wanderpast/                           # Main iOS app
@@ -189,6 +204,10 @@ Wanderpast/
 │   │   ├── CompletedToursStore.swift     # UserDefaults-backed wrapper around CompletedTours
 │   │   ├── CompletionCardView.swift      # Post-tour keepsake with stylised cluster path
 │   │   └── CompletedBadge.swift          # Reusable "COMPLETED" pill used on tour cards
+│   ├── Account/
+│   │   ├── AppleSignInController.swift   # async wrapper around ASAuthorizationAppleIDProvider
+│   │   ├── AccountStore.swift            # ObservableObject — sign in/out, identity persistence, sync trigger
+│   │   └── SettingsView.swift            # Sign in with Apple, account info, Sync now, Sign out
 │   ├── Browse/
 │   │   ├── CityBrowseViewModel.swift     # ObservableObject — wraps CatalogueRepository
 │   │   ├── CityBrowseView.swift          # SwiftUI screen — list of city cards (NavigationLink → TourListView)

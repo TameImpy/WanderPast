@@ -20,6 +20,17 @@ struct CityBrowseView: View {
             .padding(.vertical, WPSpacing.lg)
         }
         .background(Color.warmPaper)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    SettingsView()
+                } label: {
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundStyle(Color.charcoal)
+                }
+            }
+        }
         .onAppear {
             if case .loading = viewModel.state {
                 viewModel.load()

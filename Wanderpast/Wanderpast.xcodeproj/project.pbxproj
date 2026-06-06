@@ -32,6 +32,9 @@
 		A10040B /* CompletedBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10040B /* CompletedBadge.swift */; };
 		A10060 /* LiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10060 /* LiveLocationProvider.swift */; };
 		A10061 /* NearbyToursViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10061 /* NearbyToursViewModel.swift */; };
+		A10070 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10070 /* AppleSignInController.swift */; };
+		A10071 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10071 /* AccountStore.swift */; };
+		A10072 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10072 /* SettingsView.swift */; };
 		A10030 /* ambient.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10030 /* ambient.m4a */; };
 		A10031 /* wp01-traitors-gate.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10031 /* wp01-traitors-gate.m4a */; };
 		A10032 /* wp02-beauchamp-tower.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10032 /* wp02-beauchamp-tower.m4a */; };
@@ -74,6 +77,10 @@
 		B10040B /* CompletedBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedBadge.swift; sourceTree = "<group>"; };
 		B10060 /* LiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLocationProvider.swift; sourceTree = "<group>"; };
 		B10061 /* NearbyToursViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyToursViewModel.swift; sourceTree = "<group>"; };
+		B10070 /* AppleSignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
+		B10071 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
+		B10072 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B10073 /* Wanderpast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wanderpast.entitlements; sourceTree = "<group>"; };
 		B10030 /* ambient.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ambient.m4a; sourceTree = "<group>"; };
 		B10031 /* wp01-traitors-gate.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp01-traitors-gate.m4a"; sourceTree = "<group>"; };
 		B10032 /* wp02-beauchamp-tower.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp02-beauchamp-tower.m4a"; sourceTree = "<group>"; };
@@ -121,9 +128,11 @@
 				D10007 /* Location */,
 				D10008 /* Tour */,
 				D10012 /* Browse */,
+				D10013 /* Account */,
 				D10005 /* Resources */,
 				B10011 /* Assets.xcassets */,
 				B10013 /* Info.plist */,
+				B10073 /* Wanderpast.entitlements */,
 			);
 			path = Wanderpast;
 			sourceTree = "<group>";
@@ -204,6 +213,16 @@
 				B10061 /* NearbyToursViewModel.swift */,
 			);
 			path = Browse;
+			sourceTree = "<group>";
+		};
+		D10013 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				B10070 /* AppleSignInController.swift */,
+				B10071 /* AccountStore.swift */,
+				B10072 /* SettingsView.swift */,
+			);
+			path = Account;
 			sourceTree = "<group>";
 		};
 		D10009 /* Audio */ = {
@@ -345,6 +364,9 @@
 				A10040B /* CompletedBadge.swift in Sources */,
 				A10060 /* LiveLocationProvider.swift in Sources */,
 				A10061 /* NearbyToursViewModel.swift in Sources */,
+				A10070 /* AppleSignInController.swift in Sources */,
+				A10071 /* AccountStore.swift in Sources */,
+				A10072 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +440,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Wanderpast/Wanderpast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";
@@ -506,6 +529,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Wanderpast/Wanderpast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";

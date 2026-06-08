@@ -25,29 +25,29 @@
 		A10027 /* ThemeBrowseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10027 /* ThemeBrowseViewModel.swift */; };
 		A10028 /* TourListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10028 /* TourListView.swift */; };
 		A10029 /* ThemeBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10029 /* ThemeBrowseView.swift */; };
-		A10036 /* TourDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10036 /* TourDetailViewModel.swift */; };
-		A10037 /* PreviewClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10037 /* PreviewClipButton.swift */; };
-		A10038 /* CompletedToursStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10038 /* CompletedToursStore.swift */; };
-		A10039 /* CompletionCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10039 /* CompletionCardView.swift */; };
-		A10040B /* CompletedBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10040B /* CompletedBadge.swift */; };
-		A10060 /* LiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10060 /* LiveLocationProvider.swift */; };
-		A10061 /* NearbyToursViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10061 /* NearbyToursViewModel.swift */; };
-		A10070 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10070 /* AppleSignInController.swift */; };
-		A10071 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10071 /* AccountStore.swift */; };
-		A10072 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10072 /* SettingsView.swift */; };
 		A10030 /* ambient.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10030 /* ambient.m4a */; };
 		A10031 /* wp01-traitors-gate.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10031 /* wp01-traitors-gate.m4a */; };
 		A10032 /* wp02-beauchamp-tower.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10032 /* wp02-beauchamp-tower.m4a */; };
 		A10033 /* wp03-tower-green.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10033 /* wp03-tower-green.m4a */; };
 		A10034 /* transition-01-02.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10034 /* transition-01-02.m4a */; };
 		A10035 /* transition-02-03.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B10035 /* transition-02-03.m4a */; };
+		A10036 /* TourDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10036 /* TourDetailViewModel.swift */; };
+		A10037 /* PreviewClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10037 /* PreviewClipButton.swift */; };
+		A10038 /* CompletedToursStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10038 /* CompletedToursStore.swift */; };
+		A10039 /* CompletionCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10039 /* CompletionCardView.swift */; };
 		A10040 /* WanderpastCore in Frameworks */ = {isa = PBXBuildFile; productRef = P10001 /* WanderpastCore */; };
+		A10040B /* CompletedBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10040B /* CompletedBadge.swift */; };
 		A10050 /* Fraunces-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B10050 /* Fraunces-Regular.ttf */; };
 		A10051 /* Fraunces-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B10051 /* Fraunces-Medium.ttf */; };
 		A10052 /* Fraunces-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B10052 /* Fraunces-SemiBold.ttf */; };
 		A10053 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B10053 /* Inter-Regular.ttf */; };
 		A10054 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B10054 /* Inter-Medium.ttf */; };
 		A10055 /* JetBrainsMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B10055 /* JetBrainsMono-Regular.ttf */; };
+		A10060 /* LiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10060 /* LiveLocationProvider.swift */; };
+		A10061 /* NearbyToursViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10061 /* NearbyToursViewModel.swift */; };
+		A10070 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10070 /* AppleSignInController.swift */; };
+		A10071 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10071 /* AccountStore.swift */; };
+		A10072 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10072 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,29 +70,29 @@
 		B10027 /* ThemeBrowseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBrowseViewModel.swift; sourceTree = "<group>"; };
 		B10028 /* TourListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourListView.swift; sourceTree = "<group>"; };
 		B10029 /* ThemeBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBrowseView.swift; sourceTree = "<group>"; };
-		B10036 /* TourDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailViewModel.swift; sourceTree = "<group>"; };
-		B10037 /* PreviewClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewClipButton.swift; sourceTree = "<group>"; };
-		B10038 /* CompletedToursStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedToursStore.swift; sourceTree = "<group>"; };
-		B10039 /* CompletionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionCardView.swift; sourceTree = "<group>"; };
-		B10040B /* CompletedBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedBadge.swift; sourceTree = "<group>"; };
-		B10060 /* LiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLocationProvider.swift; sourceTree = "<group>"; };
-		B10061 /* NearbyToursViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyToursViewModel.swift; sourceTree = "<group>"; };
-		B10070 /* AppleSignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
-		B10071 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
-		B10072 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		B10073 /* Wanderpast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wanderpast.entitlements; sourceTree = "<group>"; };
 		B10030 /* ambient.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ambient.m4a; sourceTree = "<group>"; };
 		B10031 /* wp01-traitors-gate.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp01-traitors-gate.m4a"; sourceTree = "<group>"; };
 		B10032 /* wp02-beauchamp-tower.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp02-beauchamp-tower.m4a"; sourceTree = "<group>"; };
 		B10033 /* wp03-tower-green.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wp03-tower-green.m4a"; sourceTree = "<group>"; };
 		B10034 /* transition-01-02.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "transition-01-02.m4a"; sourceTree = "<group>"; };
 		B10035 /* transition-02-03.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "transition-02-03.m4a"; sourceTree = "<group>"; };
+		B10036 /* TourDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailViewModel.swift; sourceTree = "<group>"; };
+		B10037 /* PreviewClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewClipButton.swift; sourceTree = "<group>"; };
+		B10038 /* CompletedToursStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedToursStore.swift; sourceTree = "<group>"; };
+		B10039 /* CompletionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionCardView.swift; sourceTree = "<group>"; };
+		B10040B /* CompletedBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedBadge.swift; sourceTree = "<group>"; };
 		B10050 /* Fraunces-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fraunces-Regular.ttf"; sourceTree = "<group>"; };
 		B10051 /* Fraunces-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fraunces-Medium.ttf"; sourceTree = "<group>"; };
 		B10052 /* Fraunces-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fraunces-SemiBold.ttf"; sourceTree = "<group>"; };
 		B10053 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		B10054 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		B10055 /* JetBrainsMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMono-Regular.ttf"; sourceTree = "<group>"; };
+		B10060 /* LiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLocationProvider.swift; sourceTree = "<group>"; };
+		B10061 /* NearbyToursViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyToursViewModel.swift; sourceTree = "<group>"; };
+		B10070 /* AppleSignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
+		B10071 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
+		B10072 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B10073 /* Wanderpast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wanderpast.entitlements; sourceTree = "<group>"; };
 		B10099 /* Wanderpast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wanderpast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -157,19 +157,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		D10011 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				B10050 /* Fraunces-Regular.ttf */,
-				B10051 /* Fraunces-Medium.ttf */,
-				B10052 /* Fraunces-SemiBold.ttf */,
-				B10053 /* Inter-Regular.ttf */,
-				B10054 /* Inter-Medium.ttf */,
-				B10055 /* JetBrainsMono-Regular.ttf */,
-			);
-			path = Fonts;
-			sourceTree = "<group>";
-		};
 		D10006 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +186,39 @@
 			path = Tour;
 			sourceTree = "<group>";
 		};
+		D10009 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				B10030 /* ambient.m4a */,
+				B10031 /* wp01-traitors-gate.m4a */,
+				B10032 /* wp02-beauchamp-tower.m4a */,
+				B10033 /* wp03-tower-green.m4a */,
+				B10034 /* transition-01-02.m4a */,
+				B10035 /* transition-02-03.m4a */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		D10010 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		D10011 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B10050 /* Fraunces-Regular.ttf */,
+				B10051 /* Fraunces-Medium.ttf */,
+				B10052 /* Fraunces-SemiBold.ttf */,
+				B10053 /* Inter-Regular.ttf */,
+				B10054 /* Inter-Medium.ttf */,
+				B10055 /* JetBrainsMono-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		D10012 /* Browse */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,26 +243,6 @@
 				B10072 /* SettingsView.swift */,
 			);
 			path = Account;
-			sourceTree = "<group>";
-		};
-		D10009 /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				B10030 /* ambient.m4a */,
-				B10031 /* wp01-traitors-gate.m4a */,
-				B10032 /* wp02-beauchamp-tower.m4a */,
-				B10033 /* wp03-tower-green.m4a */,
-				B10034 /* transition-01-02.m4a */,
-				B10035 /* transition-02-03.m4a */,
-			);
-			path = Audio;
-			sourceTree = "<group>";
-		};
-		D10010 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 		D10099 /* Products */ = {
@@ -284,7 +284,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					E10001 = {
 						CreatedOnToolsVersion = 15.4;
@@ -408,6 +408,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 68X5UNNLZ5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -430,6 +431,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -444,7 +446,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";
-				DEVELOPMENT_TEAM = 68X5UNNLZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wanderpast/Info.plist;
@@ -504,6 +505,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 68X5UNNLZ5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -519,6 +521,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -533,7 +536,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wanderpast/Preview Content\"";
-				DEVELOPMENT_TEAM = 68X5UNNLZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wanderpast/Info.plist;

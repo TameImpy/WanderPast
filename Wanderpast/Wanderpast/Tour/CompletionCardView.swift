@@ -22,6 +22,7 @@ struct CompletionCardView: View {
                     .font(.displayLarge)
                     .foregroundStyle(Color.deepInk)
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 ClusterPathView(waypoints: waypoints)
                     .frame(height: 160)
